@@ -42,14 +42,51 @@ function renderLogs() {
   const logs = data[currentUser].logs;
   workLog.innerHTML = logs
     .map(
-      (log) => `
-      <li class="bg-gray-200 p-4 rounded-lg">
-        <p><strong>Date:</strong> ${log.date}</p>
-        <p><strong>Hours Worked:</strong> ${log.hours}</p>
-        <p><strong>Task:</strong> ${log.task}</p>
+      (log, index) => `
+      <li class="bg-gray-200 p-4 rounded-lg flex justify-between items-start">
+        <div>
+          <p><strong>Date:</strong> ${log.date}</p>
+          <p><strong>Hours Worked:</strong> ${log.hours}</p>
+          <p><strong>Task:</strong> ${log.task}</p>
+        </div>
+        <div class="flex gap-2">
+          <!-- Edit Button -->
+          <button class="bg-green-600 text-white px-2 py-1 rounded-md hover:bg-yellow-500" onclick="editLog(${index})">Edit</button>
+          <!-- Remove Button -->
+          <button class="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600" onclick="removeLog(${index})">Remove</button>
+        </div>
       </li>`
     )
     .join("");
+}
+
+function editLog(index) {
+  const log = data[currentUser].logs[index];
+
+  // Populate the input fields with the selected log's data
+  document.getElementById("startDate").value = log.date;
+  document.getElementById("startTime").value = log.startTime;
+  document.getElementById("endTime").value = log.endTime;
+  document.getElementById("taskDescription").value = log.task;
+
+  // Remove the log from the list temporarily for editing
+  data[currentUser].logs.splice(index, 1);
+
+  // Save the updated logs and re-render
+  localStorage.setItem("data", JSON.stringify(data));
+  renderLogs();
+}
+
+function removeLog(index) {
+  // Confirm before removing
+  if (confirm("Are you sure you want to remove this log?")) {
+    // Remove the log
+    data[currentUser].logs.splice(index, 1);
+
+    // Save the updated logs and re-render
+    localStorage.setItem("data", JSON.stringify(data));
+    renderLogs();
+  }
 }
 
 // Password Validation
