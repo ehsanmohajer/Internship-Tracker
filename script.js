@@ -28,32 +28,6 @@ let currentUser = null;
 // Predefined Manager Password
 const managerPassword = "ViitasaariTrainee2024";
 
-function updateCurrentDay() {
-  const currentDayElement = document.getElementById("currentDay");
-
-  // Get current date
-  const now = new Date();
-
-  // Days and months arrays for friendly names
-  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-
-  // Extract day, date, month, and year
-  const dayName = days[now.getDay()];
-  const dateNumber = now.getDate();
-  const monthName = months[now.getMonth()];
-  const year = now.getFullYear();
-
-  // Set the text content
-  currentDayElement.textContent = `Today is ${dayName}, ${dateNumber} ${monthName} ${year}`;
-}
-
-// Call the function on page load
-updateCurrentDay();
-
 // Utility Functions
 function updateClock() {
   const now = new Date();
