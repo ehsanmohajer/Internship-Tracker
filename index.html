@@ -8,16 +8,24 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-  <!-- Login/Register Page -->
+    <!-- Login/Register Page -->
   <div id="loginPage" class="min-h-screen flex flex-col items-center justify-center p-4">
+  
+  <!-- Analog Clock -->
+  <div class="text-center mb-6">
+    <iframe
+    src="https://free.timeanddate.com/clock/i9o72jh4/n101/szw110/szh110/hocbbb/hbw6/cf100/hgr0/fas16/fdi64/mqc000/mqs4/mql20/mqw2/mqd94/mhc000/mhs3/mhl20/mhw2/mhd94/mmc000/mml10/mmw1/mmd94/hmr7/hsc000/hss1/hsl90" frameborder="0" width="110" height="110"
+    ></iframe>
+  </div>
+
     <!-- Welcome Text -->
     <div id="welcomeText" class="text-center mb-6">
       <h1 class="text-3xl font-bold text-blue-500 mb-2">Welcome to Trainee Program at Digikeskus</h1>
-      <p class="text-lg font-medium text-gray-600" id="dateInfo"></p>
+      <p id="currentDay" class="text-lg font-medium text-gray-600"></p>
     </div>
 
     <div class="bg-white shadow-md rounded-lg p-6 max-w-sm w-full">
-      <h1 class="text-2xl font-bold mb-4 text-center">User Login / Register</h1>
+      <h1 class="text-2xl font-bold mb-4 text-center">User Login</h1>
 
       <!-- Username -->
       <div class="mb-4">
@@ -120,7 +128,7 @@
       <ul id="managerList" class="space-y-4"></ul>
 
       <button id="backToLogin" class="mt-6 bg-blue-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-blue-600">
-        Back to Login
+        Exit
       </button>
     </div>
   </div>

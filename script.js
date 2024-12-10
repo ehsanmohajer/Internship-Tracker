@@ -174,36 +174,18 @@ forgotPasswordButton.addEventListener("click", () => {
 managerButton.addEventListener("click", () => {
   const enteredPassword = prompt("Enter the Manager Password:");
   if (enteredPassword === managerPassword) {
+    // Switch to Manager Page
     loginPage.classList.add("hidden");
     managerPage.classList.remove("hidden");
 
-    const userEntries = Object.entries(data);
-    managerList.innerHTML = userEntries
-      .map(
-        ([username, userData]) => `
-        <li class="bg-gray-200 p-4 rounded-lg">
-          <h3 class="text-lg font-bold">${username}</h3>
-          <p><strong>Remaining Hours:</strong> ${userData.remainingHours.toFixed(2)}</p>
-          <h4 class="font-bold mt-2">Work Logs:</h4>
-          <ul>
-            ${userData.logs
-              .map(
-                (log) => `
-              <li class="pl-4">
-                <p><strong>Date:</strong> ${log.date}</p>
-                <p><strong>Hours:</strong> ${log.hours}</p>
-                <p><strong>Task:</strong> ${log.task}</p>
-              </li>`
-              )
-              .join("")}
-          </ul>
-        </li>`
-      )
-      .join("");
+    // Render Manager Dashboard
+    renderManagerDashboard();
   } else {
+    // Invalid Password Alert
     alert("Invalid Manager Password.");
   }
 });
+
 
 backToLogin.addEventListener("click", () => {
   managerPage.classList.add("hidden");
@@ -287,34 +269,46 @@ logoutButton.addEventListener("click", () => {
   passwordInput.value = "";
 });
 
-// add X button
+// add remove user button
 function renderManagerDashboard() {
   managerList.innerHTML = Object.entries(data)
     .map(
-      ([username, userData]) => `
-        <li class="bg-gray-200 p-4 rounded-lg flex justify-between items-center">
-          <div>
-            <h3 class="text-lg font-bold">${username}</h3>
-            <p><strong>Remaining Hours:</strong> ${userData.remainingHours.toFixed(2)}</p>
-            <h4 class="font-bold mt-2">Work Logs:</h4>
-            <ul class="space-y-2 border-t border-gray-300 pt-2">
-              ${userData.logs
-                .map(
-                  (log) => `
-                    <li>
-                      <p><strong>Date:</strong> ${log.date}</p>
-                      <p><strong>Hours:</strong> ${log.hours}</p>
-                      <p><strong>Task:</strong> ${log.task}</p>
-                    </li>`
-                )
-                .join("")}
-            </ul>
-          </div>
-          <button class="text-red-500 text-sm font-bold hover:underline ml-4" onclick="removeUser('${username}')">X</button>
-        </li>`
+      ([username, userData]) => {
+        // Calculate total working hours
+        const totalWorkedHours = userData.logs.reduce((sum, log) => sum + log.hours, 0);
+
+        return `
+          <li class="bg-gray-200 p-4 rounded-lg flex flex-col justify-between">
+            <div>
+              <h3 class="text-lg font-bold">User: ['${username}']</h3>
+              <p><strong>Remaining Hours:</strong> ${userData.remainingHours.toFixed(2)}</p>
+              <p><strong>Total Working Hours:</strong> ${totalWorkedHours.toFixed(2)}</p>
+              <h4 class="font-bold mt-2">Work Logs:</h4>
+              <ul class="space-y-2 border-t border-gray-300 pt-2">
+                ${userData.logs
+                  .map(
+                    (log) => `
+                      <li class="border-b border-gray-300 pb-2">
+                        <p><span class="text-blue-500 font-medium">Date:</span> ${log.date}</p>
+                        <p><span class="text-blue-500 font-medium">Hours:</span> ${log.hours}</p>
+                        <p><span class="text-blue-500 font-medium">Task:</span> ${log.task}</p>
+                      </li>`
+                  )
+                  .join("")}
+              </ul>
+            </div>
+            <!-- Remove User Button -->
+            <div class="flex justify-end mt-4">
+              <button 
+                class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded-md hover:bg-red-600" 
+                onclick="removeUser('${username}')">Remove User</button>
+            </div>
+          </li>`;
+      }
     )
     .join("");
 }
+
 
 function removeUser(username) {
   if (confirm(`Are you sure you want to remove user "${username}"?`)) {
@@ -331,3 +325,31 @@ function removeUser(username) {
     alert(`User "${username}" has been successfully removed.`);
   }
 }
+
+
+// Utility Functions
+function updateCurrentDay() {
+  const currentDayElement = document.getElementById("currentDay");
+
+  // Get current date
+  const now = new Date();
+
+  // Days and months arrays for friendly names
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  // Extract day, date, month, and year
+  const dayName = days[now.getDay()];
+  const dateNumber = now.getDate();
+  const monthName = months[now.getMonth()];
+  const year = now.getFullYear();
+
+  // Set the text content
+  currentDayElement.textContent = `Today is ${dayName}, ${dateNumber} ${monthName} ${year}`;
+}
+
+// Call the function on page load
+updateCurrentDay();
