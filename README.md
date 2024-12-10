@@ -39,7 +39,9 @@ This project is a web-based **User Dashboard** to manage and track internship ho
 git clone (https://github.com/ehsanmohajer/Internship-Tracker.git)
 cd Internship-Tracker
 
-UserDashboardTraineeHours/
+
+
+## Internship-Tracker/
 ├── index.html        # Main HTML file
 ├── script.js         # JavaScript for functionality
 ├── styles.css        # (Optional) Additional custom styles
