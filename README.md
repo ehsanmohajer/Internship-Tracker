@@ -1,4 +1,4 @@
-# internship-tracker
+# Internship Tracker
 A webpage for students to save their working hours and logs into their dashboard.
 
 # User Dashboard for Internship Hours
