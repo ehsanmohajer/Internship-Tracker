@@ -1,9 +1,10 @@
+<!-- User Track Recorder for Trainee Program -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Internship Tracker - Dashboard</title>
+  <title>User Dashboard - Internship Tracker</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -35,6 +36,13 @@
         </button>
       </div>
 
+      <!-- Manager Access -->
+      <div class="mt-4">
+        <button id="managerButton" class="bg-gray-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-gray-600">
+          Manager Access
+        </button>
+      </div>
+
       <!-- Forgot Password -->
       <div class="mt-4">
         <button id="forgotPasswordButton" class="text-blue-500 font-medium underline">
@@ -47,14 +55,15 @@
     </div>
   </div>
 
-  <!-- Dashboard -->
+  <!-- User Dashboard -->
   <div id="dashboard" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
     <div class="bg-white shadow-md rounded-lg p-6 max-w-lg w-full">
 
-      <!-- Clock and Remaining Hours -->
+      <!-- Welcome Message -->
       <div class="mb-6 text-center">
-        <h2 id="currentDateTime" class="text-2xl font-bold mb-2"></h2>
-        <h2 class="text-xl font-bold">Remaining Hours: <span id="remainingHours">270</span></h2>
+        <h2 id="welcomeMessage" class="text-2xl font-bold mb-2"></h2>
+        <h2 id="currentDateTime" class="text-lg font-medium mb-4"></h2>
+        <h2 class="text-lg font-bold">Remaining Hours: <span id="remainingHours">270</span></h2>
       </div>
 
       <!-- Start Date -->
@@ -90,9 +99,22 @@
         <ul id="workLog" class="space-y-2"></ul>
       </div>
 
-      <!-- Logout Button -->
+      <!-- Log out Button -->
       <button id="logoutButton" class="mt-6 bg-red-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-red-600">
         Logout
+      </button>
+    </div>
+  </div>
+
+  <!-- Manager Page -->
+  <div id="managerPage" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="bg-white shadow-md rounded-lg p-6 max-w-lg w-full">
+
+      <h1 class="text-2xl font-bold mb-4 text-center">Manager Dashboard</h1>
+      <ul id="managerList" class="space-y-4"></ul>
+
+      <button id="backToLogin" class="mt-6 bg-blue-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-blue-600">
+        Back to Login
       </button>
     </div>
   </div>
