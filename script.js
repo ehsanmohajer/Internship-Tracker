@@ -239,13 +239,14 @@ function updateWelcomeDate() {
     "July", "August", "September", "October", "November", "December"
   ];
 
-  // Extract day, month, and year
+  // Extract day, date, month, and year
   const dayName = days[now.getDay()];
+  const dateNumber = now.getDate();
   const monthName = months[now.getMonth()];
   const year = now.getFullYear();
 
   // Set the text content
-  dateInfoElement.textContent = `${dayName}, ${monthName} ${year}`;
+  dateInfoElement.textContent = `${dayName}, ${dateNumber} ${monthName} ${year}`;
 }
 
 // Call the function to update the welcome text
