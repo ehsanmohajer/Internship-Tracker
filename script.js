@@ -26,7 +26,30 @@ let data = JSON.parse(localStorage.getItem("data")) || {}; // Stores user-specif
 let currentUser = null;
 
 // Predefined Manager Password
-const managerPassword = "ViitasaariTrainee2024";
+const managerPassword = "admin";
+
+// Adding Time of Day to Login Page
+function updateCurrentDay() {
+  const dateInfo = document.getElementById("dateInfo");
+
+  const now = new Date();
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  const dayName = days[now.getDay()];
+  const dateNumber = now.getDate();
+  const monthName = months[now.getMonth()];
+  const year = now.getFullYear();
+
+  dateInfo.textContent = `Today is ${dayName}, ${dateNumber} ${monthName} ${year}`;
+}
+
+// Call this function when the page loads
+updateCurrentDay();
+
 
 // Utility Functions
 function updateClock() {
@@ -38,6 +61,50 @@ function updateClock() {
 function updateRemainingHours() {
   remainingHoursDisplay.textContent = data[currentUser].remainingHours.toFixed(2);
 }
+
+// // Handle Empty Logs Gracefully
+  function renderLogs() {
+  const logs = data[currentUser].logs || [];
+
+  // Calculate total hours worked
+  const totalWorkedHours = logs.reduce((sum, log) => sum + log.hours, 0);
+
+  // Update remaining hours
+  data[currentUser].remainingHours = logs.length > 0 ? 270 - totalWorkedHours : 270;
+
+  // Update the total hours worked display
+  totalHoursWorkedDisplay.textContent = totalWorkedHours.toFixed(2);
+
+  // Update the remaining hours display
+  updateRemainingHours();
+
+  // Handle Empty Logs Gracefully
+  workLog.innerHTML = logs.length > 0
+    ? logs
+        .map(
+          (log, index) => `
+          <li class="bg-gray-200 p-4 rounded-lg flex justify-between items-start">
+            <div>
+              <p><strong>Date:</strong> ${log.date}</p>
+              <p><strong>Hours Worked:</strong> ${log.hours}</p>
+              <p><strong>Task:</strong> ${log.task}</p>
+            </div>
+            <div class="flex gap-2">
+              <!-- Edit Button -->
+              <button class="bg-yellow-400 text-white px-2 py-1 rounded-md hover:bg-yellow-500" onclick="editLog(${index})">Edit</button>
+              <!-- Remove Button -->
+              <button class="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600" onclick="removeLog(${index})">Remove</button>
+            </div>
+          </li>`
+        )
+        .join("")
+    : `<p class="text-gray-500">No logs yet. Start by adding a task!</p>`;
+
+  // Save updated data to localStorage
+  localStorage.setItem("data", JSON.stringify(data));
+}
+
+
 
 function renderLogs() {
   const logs = data[currentUser].logs;
@@ -53,6 +120,19 @@ function renderLogs() {
 
   // Update the remaining hours display
   updateRemainingHours();
+
+  
+
+  // Clear Login Fields After Logout:
+  logoutButton.addEventListener("click", () => {
+    currentUser = null;
+    loginPage.classList.remove("hidden");
+    dashboard.classList.add("hidden");
+    usernameInput.value = "";
+    passwordInput.value = "";
+  });
+  
+
 
   // Render the logs
   workLog.innerHTML = logs
@@ -129,20 +209,31 @@ loginButton.addEventListener("click", () => {
     alert("Both fields are required.");
     return;
   }
-
-  if (users[username] !== password) {
+  if (users[username] === password) {
+    currentUser = username;
+    loginPage.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+    welcomeMessage.textContent = `Hello, ${currentUser}!`;
+    updateClock(); // Start updating time dynamically
+    renderLogs(); // Render the user's logs
+  } else {
     alert("Invalid username or password.");
-    return;
   }
-
-  currentUser = username;
-  loginPage.classList.add("hidden");
-  dashboard.classList.remove("hidden");
-
-  welcomeMessage.textContent = `Hello, ${currentUser}!`;
-  updateClock();
-  renderLogs();
 });
+
+//   if (users[username] !== password) {
+//     alert("Invalid username or password.");
+//     return;
+//   }
+
+//   currentUser = username;
+//   loginPage.classList.add("hidden");
+//   dashboard.classList.remove("hidden");
+
+//   welcomeMessage.textContent = `Hello, ${currentUser}!`;
+//   updateClock();
+//   renderLogs();
+// });
 
 // Forgot Password
 forgotPasswordButton.addEventListener("click", () => {
@@ -185,11 +276,11 @@ managerButton.addEventListener("click", () => {
           <h3 class="text-lg font-bold">${username}</h3>
           <p><strong>Remaining Hours:</strong> ${userData.remainingHours.toFixed(2)}</p>
           <h4 class="font-bold mt-2">Work Logs:</h4>
-          <ul>
+          <ul class="space-y-4 border-t border-gray-300 pt-2">
             ${userData.logs
               .map(
-                (log) => `
-              <li class="pl-4">
+                (log, index) => `
+              <li class="border-b border-gray-300 pb-2 mb-2">
                 <p><strong>Date:</strong> ${log.date}</p>
                 <p><strong>Hours:</strong> ${log.hours}</p>
                 <p><strong>Task:</strong> ${log.task}</p>
@@ -217,7 +308,6 @@ submitButton.addEventListener("click", () => {
   const endTime = parseInt(document.getElementById("endTime").value);
   const taskDescription = document.getElementById("taskDescription").value.trim();
 
-  // Validate input fields
   if (!startDate || isNaN(startTime) || isNaN(endTime) || !taskDescription) {
     alert("All fields are required.");
     return;
@@ -230,7 +320,6 @@ submitButton.addEventListener("click", () => {
 
   const hoursWorked = endTime - startTime;
 
-  // Add the new work log
   data[currentUser].logs.push({
     date: startDate,
     hours: hoursWorked,
@@ -239,16 +328,52 @@ submitButton.addEventListener("click", () => {
     endTime,
   });
 
-  // Save updated logs and re-render
   localStorage.setItem("data", JSON.stringify(data));
   renderLogs();
 
-  // Clear input fields
   document.getElementById("startDate").value = "";
   document.getElementById("startTime").value = "";
   document.getElementById("endTime").value = "";
   document.getElementById("taskDescription").value = "";
 });
+// submitButton.addEventListener("click", () => {
+//   const startDate = document.getElementById("startDate").value;
+//   const startTime = parseInt(document.getElementById("startTime").value);
+//   const endTime = parseInt(document.getElementById("endTime").value);
+//   const taskDescription = document.getElementById("taskDescription").value.trim();
+
+//   // Validate input fields
+//   if (!startDate || isNaN(startTime) || isNaN(endTime) || !taskDescription) {
+//     alert("All fields are required.");
+//     return;
+//   }
+
+//   if (endTime <= startTime) {
+//     alert("End time must be after start time.");
+//     return;
+//   }
+
+//   const hoursWorked = endTime - startTime;
+
+//   // Add the new work log
+//   data[currentUser].logs.push({
+//     date: startDate,
+//     hours: hoursWorked,
+//     task: taskDescription,
+//     startTime,
+//     endTime,
+//   });
+
+//   // Save updated logs and re-render
+//   localStorage.setItem("data", JSON.stringify(data));
+//   renderLogs();
+
+//   // Clear input fields
+//   document.getElementById("startDate").value = "";
+//   document.getElementById("startTime").value = "";
+//   document.getElementById("endTime").value = "";
+//   document.getElementById("taskDescription").value = "";
+// });
 
 // Edit Work Log
 function editLog(index) {
@@ -286,3 +411,5 @@ logoutButton.addEventListener("click", () => {
   usernameInput.value = "";
   passwordInput.value = "";
 });
+
+updateCurrentDay();
