@@ -10,10 +10,17 @@
 
   <!-- Login/Register Page -->
   <div id="loginPage" class="min-h-screen flex flex-col items-center justify-center p-4">
+    <!-- Analog Clock -->
+    <div class="text-center mb-6">
+      <iframe
+      src="https://free.timeanddate.com/clock/i9o72jh4/n101/szw110/szh110/hocbbb/hbw6/cf100/hgr0/fas16/fdi64/mqc000/mqs4/mql20/mqw2/mqd94/mhc000/mhs3/mhl20/mhw2/mhd94/mmc000/mml10/mmw1/mmd94/hmr7/hsc000/hss1/hsl90" frameborder="0" width="110" height="110"
+      ></iframe>
+    </div>
+
     <!-- Welcome Text -->
     <div id="welcomeText" class="text-center mb-6">
       <h1 class="text-3xl font-bold text-blue-500 mb-2">Welcome to Trainee Program at Digikeskus</h1>
-      <p class="text-lg font-medium text-gray-600" id="dateInfo"></p>
+      <p id="currentDay" class="text-lg font-medium text-gray-600"></p>
     </div>
 
     <div class="bg-white shadow-md rounded-lg p-6 max-w-sm w-full">
@@ -57,71 +64,9 @@
 
       <!-- Footer -->
       <p class="mt-6 text-center text-gray-500">Created by Ehsan Mohajer 2024</p>
-      <p class="mt-6 text-center text-blue-500"> <a href="https://github.com/ehsanmohajer/Internship-Tracker">(Github)</a></p>
-    </div>
-  </div>
-
-  <!-- User Dashboard -->
-  <div id="dashboard" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
-    <div class="bg-white shadow-md rounded-lg p-6 max-w-lg w-full">
-      <!-- Welcome Message -->
-      <div class="mb-6 text-center">
-        <h2 id="welcomeMessage" class="text-2xl font-bold mb-2"></h2>
-        <h2 id="currentDateTime" class="text-lg font-medium mb-4"></h2>
-        <h2 class="text-lg font-bold">Remaining Hours: <span id="remainingHours">270</span></h2>
-        <h2 class="text-lg font-bold text-blue-500">Total Hours Worked: <span id="totalHoursWorked">0</span></h2>
-      </div>
-
-      <!-- Start Date -->
-      <div class="mb-4">
-        <label class="block font-medium mb-2">Start Date</label>
-        <input id="startDate" type="date" class="border border-gray-300 rounded-lg px-3 py-2 w-full" />
-      </div>
-
-      <!-- Work Hours -->
-      <div class="mb-4">
-        <label class="block font-medium mb-2">Start Time (Hour)</label>
-        <input id="startTime" type="number" class="border border-gray-300 rounded-lg px-3 py-2 w-full" placeholder="e.g., 8" />
-      </div>
-      <div class="mb-4">
-        <label class="block font-medium mb-2">End Time (Hour)</label>
-        <input id="endTime" type="number" class="border border-gray-300 rounded-lg px-3 py-2 w-full" placeholder="e.g., 15" />
-      </div>
-
-      <!-- Task Description -->
-      <div class="mb-4">
-        <label class="block font-medium mb-2">What Did You Do Today?</label>
-        <textarea id="taskDescription" rows="4" class="border border-gray-300 rounded-lg px-3 py-2 w-full" placeholder="Describe your tasks"></textarea>
-      </div>
-
-      <!-- Submit Button -->
-      <button id="submitButton" class="bg-blue-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-blue-600">
-        Save Work
-      </button>
-
-      <!-- Work Log -->
-      <div class="mt-6">
-        <h2 class="text-xl font-bold mb-2">Work Log</h2>
-        <ul id="workLog" class="space-y-2"></ul>
-      </div>
-
-      <!-- Logout Button -->
-      <button id="logoutButton" class="mt-6 bg-red-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-red-600">
-        Logout
-      </button>
-    </div>
-  </div>
-
-  <!-- Manager Page -->
-  <div id="managerPage" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
-    <div class="bg-white shadow-md rounded-lg p-6 max-w-lg w-full">
-
-      <h1 class="text-2xl font-bold mb-4 text-center">Manager Dashboard</h1>
-      <ul id="managerList" class="space-y-4"></ul>
-
-      <button id="backToLogin" class="mt-6 bg-blue-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-blue-600">
-        Back to Login
-      </button>
+      <p class="mt-2 text-center text-blue-500">
+        <a href="https://github.com/ehsanmohajer/Internship-Tracker" target="_blank">(Github)</a>
+      </p>
     </div>
   </div>
 
