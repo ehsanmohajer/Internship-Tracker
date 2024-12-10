@@ -8,30 +8,13 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
 
-  <!-- date info -->
-  <div id="welcomeText" class="text-center mb-6">
-    <h1 class="text-3xl font-bold text-blue-500 mb-2">Welcome to Trainee Program at Digikeskus</h1>
-    <p class="text-lg font-medium text-gray-600" id="dateInfo"></p>
-  </div>
-
   <!-- Login/Register Page -->
   <div id="loginPage" class="min-h-screen flex flex-col items-center justify-center p-4">
-
-  <!-- Analog Clock -->
-  <div class="text-center mb-6">
-    <iframe
-      src="https://free.timeanddate.com/clock/i9o72jh4/n101/szw110/szh110/hocbbb/hbw6/cf100/hgr0/fas16/fdi64/mqc000/mqs4/mql20/mqw2/mqd94/mhc000/mhs3/mhl20/mhw2/mhd94/mmc000/mml10/mmw1/mmd94/hmr7/hsc000/hss1/hsl90"
-      frameborder="0"
-      width="110"
-      height="110">
-    </iframe>
-  </div>
-
     <!-- Welcome Text -->
-    <!-- <div id="welcomeText" class="text-center mb-6">
+    <div id="welcomeText" class="text-center mb-6">
       <h1 class="text-3xl font-bold text-blue-500 mb-2">Welcome to Trainee Program at Digikeskus</h1>
       <p class="text-lg font-medium text-gray-600" id="dateInfo"></p>
-    </div> -->
+    </div>
 
     <div class="bg-white shadow-md rounded-lg p-6 max-w-sm w-full">
       <h1 class="text-2xl font-bold mb-4 text-center">User Login / Register</h1>
@@ -130,7 +113,7 @@
   </div>
 
   <!-- Manager Page -->
-  <!-- <div id="managerPage" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
+  <div id="managerPage" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
     <div class="bg-white shadow-md rounded-lg p-6 max-w-lg w-full">
 
       <h1 class="text-2xl font-bold mb-4 text-center">Manager Dashboard</h1>
@@ -140,43 +123,7 @@
         Back to Login
       </button>
     </div>
-  </div> -->
-
-  <!-- Manager Page -->
-<div id="managerPage" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
-  <div class="bg-white shadow-md rounded-lg p-6 max-w-lg w-full">
-    <h1 class="text-2xl font-bold mb-4 text-center">Manager Dashboard</h1>
-
-    <!-- List of Users -->
-    <div class="mb-6">
-      <h2 class="text-xl font-bold mb-2">All Users</h2>
-      <ul id="managerList" class="space-y-4"></ul>
-    </div>
-
-    <!-- Create New User -->
-    <div class="bg-gray-100 p-4 rounded-lg">
-      <h2 class="text-xl font-bold mb-4">Create New User</h2>
-      <div class="mb-4">
-        <label class="block font-medium mb-2">Username</label>
-        <input id="newUsername" type="text" class="border border-gray-300 rounded-lg px-3 py-2 w-full" placeholder="Enter username" />
-      </div>
-      <div class="mb-4">
-        <label class="block font-medium mb-2">Password</label>
-        <input id="newPassword" type="password" class="border border-gray-300 rounded-lg px-3 py-2 w-full" placeholder="Enter password" />
-      </div>
-      <button id="createUserButton" class="bg-green-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-green-600">
-        Create User
-      </button>
-    </div>
-
-    <!-- Back to Login -->
-    <button id="backToLogin" class="mt-6 bg-blue-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-blue-600">
-      Back to Login
-    </button>
   </div>
-</div>
-
-
 
   <script src="script.js"></script>
 </body>
