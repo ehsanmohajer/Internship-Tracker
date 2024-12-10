@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Internship Tracker - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Login/Register Page -->
+  <div id="loginPage" class="min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="bg-white shadow-md rounded-lg p-6 max-w-sm w-full">
+      <h1 class="text-2xl font-bold mb-4 text-center">User Login / Register</h1>
+
+      <!-- Username -->
+      <div class="mb-4">
+        <label class="block font-medium mb-2">Username</label>
+        <input id="username" type="text" class="border border-gray-300 rounded-lg px-3 py-2 w-full" placeholder="Enter your username" />
+      </div>
+
+      <!-- Password -->
+      <div class="mb-4">
+        <label class="block font-medium mb-2">Password</label>
+        <input id="password" type="password" class="border border-gray-300 rounded-lg px-3 py-2 w-full" placeholder="Enter your password" />
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex gap-2">
+        <button id="loginButton" class="bg-blue-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-blue-600">
+          Login
+        </button>
+        <button id="registerButton" class="bg-green-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-green-600">
+          Register
+        </button>
+      </div>
+
+      <!-- Forgot Password -->
+      <div class="mt-4">
+        <button id="forgotPasswordButton" class="text-blue-500 font-medium underline">
+          Forgot Password?
+        </button>
+      </div>
+
+      <!-- Footer -->
+      <p class="mt-6 text-center text-gray-500">Created by Ehsan Mohajer 2024</p>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="dashboard" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="bg-white shadow-md rounded-lg p-6 max-w-lg w-full">
+
+      <!-- Clock and Remaining Hours -->
+      <div class="mb-6 text-center">
+        <h2 id="currentDateTime" class="text-2xl font-bold mb-2"></h2>
+        <h2 class="text-xl font-bold">Remaining Hours: <span id="remainingHours">270</span></h2>
+      </div>
+
+      <!-- Start Date -->
+      <div class="mb-4">
+        <label class="block font-medium mb-2">Start Date</label>
+        <input id="startDate" type="date" class="border border-gray-300 rounded-lg px-3 py-2 w-full" />
+      </div>
+
+      <!-- Work Hours -->
+      <div class="mb-4">
+        <label class="block font-medium mb-2">Start Time (Hour)</label>
+        <input id="startTime" type="number" class="border border-gray-300 rounded-lg px-3 py-2 w-full" placeholder="e.g., 8" />
+      </div>
+      <div class="mb-4">
+        <label class="block font-medium mb-2">End Time (Hour)</label>
+        <input id="endTime" type="number" class="border border-gray-300 rounded-lg px-3 py-2 w-full" placeholder="e.g., 15" />
+      </div>
+
+      <!-- Task Description -->
+      <div class="mb-4">
+        <label class="block font-medium mb-2">What Did You Do Today?</label>
+        <textarea id="taskDescription" rows="4" class="border border-gray-300 rounded-lg px-3 py-2 w-full" placeholder="Describe your tasks"></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <button id="submitButton" class="bg-blue-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-blue-600">
+        Save Work
+      </button>
+
+      <!-- Work Log -->
+      <div class="mt-6">
+        <h2 class="text-xl font-bold mb-2">Work Log</h2>
+        <ul id="workLog" class="space-y-2"></ul>
+      </div>
+
+      <!-- Logout Button -->
+      <button id="logoutButton" class="mt-6 bg-red-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-red-600">
+        Logout
+      </button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
