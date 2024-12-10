@@ -36,5 +36,5 @@ This project is a web-based **User Dashboard** to manage and track internship ho
 ## How to Use
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/ehsanmohajer/UserDashboardTraineeHours.git
-cd UserDashboardTraineeHours
+git clone (https://github.com/ehsanmohajer/Internship-Tracker.git)
+cd Internship-Tracker
