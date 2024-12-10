@@ -24,7 +24,10 @@ let users = JSON.parse(localStorage.getItem("users")) || {}; // Stores usernames
 let data = JSON.parse(localStorage.getItem("data")) || {}; // Stores user-specific internship data
 let currentUser = null;
 
-// Utility functions
+// Predefined Manager Password
+const managerPassword = "ViitasaariTrainee2024";
+
+// Utility Functions
 function updateClock() {
   const now = new Date();
   currentDateTime.textContent = now.toLocaleString();
@@ -49,6 +52,12 @@ function renderLogs() {
     .join("");
 }
 
+// Password Validation
+function isValidPassword(password) {
+  const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  return regex.test(password);
+}
+
 // Registration
 registerButton.addEventListener("click", () => {
   const username = usernameInput.value.trim();
@@ -56,6 +65,13 @@ registerButton.addEventListener("click", () => {
 
   if (!username || !password) {
     alert("Both fields are required.");
+    return;
+  }
+
+  if (!isValidPassword(password)) {
+    alert(
+      "Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, one number, and one special character."
+    );
     return;
   }
 
@@ -104,34 +120,65 @@ loginButton.addEventListener("click", () => {
   renderLogs();
 });
 
+// Forgot Password
+forgotPasswordButton.addEventListener("click", () => {
+  const username = prompt("Enter your username to reset your password:");
+
+  if (!username || !users[username]) {
+    alert("User not found. Please enter a valid username.");
+    return;
+  }
+
+  const newPassword = prompt(
+    "Enter your new password (must be at least 8 characters long and include one uppercase letter, one lowercase letter, one number, and one special character):"
+  );
+
+  if (!newPassword || !isValidPassword(newPassword)) {
+    alert(
+      "Invalid password format. Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, one number, and one special character."
+    );
+    return;
+  }
+
+  users[username] = newPassword;
+  localStorage.setItem("users", JSON.stringify(users));
+
+  alert("Password has been reset successfully. You can now log in with your new password.");
+});
+
 // Manager Access
 managerButton.addEventListener("click", () => {
-  loginPage.classList.add("hidden");
-  managerPage.classList.remove("hidden");
+  const enteredPassword = prompt("Enter the Manager Password:");
+  if (enteredPassword === managerPassword) {
+    loginPage.classList.add("hidden");
+    managerPage.classList.remove("hidden");
 
-  const userEntries = Object.entries(data);
-  managerList.innerHTML = userEntries
-    .map(
-      ([username, userData]) => `
-      <li class="bg-gray-200 p-4 rounded-lg">
-        <h3 class="text-lg font-bold">${username}</h3>
-        <p><strong>Remaining Hours:</strong> ${userData.remainingHours.toFixed(2)}</p>
-        <h4 class="font-bold mt-2">Work Logs:</h4>
-        <ul>
-          ${userData.logs
-            .map(
-              (log) => `
-            <li class="pl-4">
-              <p><strong>Date:</strong> ${log.date}</p>
-              <p><strong>Hours:</strong> ${log.hours}</p>
-              <p><strong>Task:</strong> ${log.task}</p>
-            </li>`
-            )
-            .join("")}
-        </ul>
-      </li>`
-    )
-    .join("");
+    const userEntries = Object.entries(data);
+    managerList.innerHTML = userEntries
+      .map(
+        ([username, userData]) => `
+        <li class="bg-gray-200 p-4 rounded-lg">
+          <h3 class="text-lg font-bold">${username}</h3>
+          <p><strong>Remaining Hours:</strong> ${userData.remainingHours.toFixed(2)}</p>
+          <h4 class="font-bold mt-2">Work Logs:</h4>
+          <ul>
+            ${userData.logs
+              .map(
+                (log) => `
+              <li class="pl-4">
+                <p><strong>Date:</strong> ${log.date}</p>
+                <p><strong>Hours:</strong> ${log.hours}</p>
+                <p><strong>Task:</strong> ${log.task}</p>
+              </li>`
+              )
+              .join("")}
+          </ul>
+        </li>`
+      )
+      .join("");
+  } else {
+    alert("Invalid Manager Password.");
+  }
 });
 
 backToLogin.addEventListener("click", () => {
@@ -148,6 +195,11 @@ submitButton.addEventListener("click", () => {
 
   if (!startDate || isNaN(startTime) || isNaN(endTime) || !taskDescription) {
     alert("All fields are required.");
+    return;
+  }
+
+  if (endTime <= startTime) {
+    alert("End time must be after start time.");
     return;
   }
 
