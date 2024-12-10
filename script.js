@@ -262,40 +262,140 @@ forgotPasswordButton.addEventListener("click", () => {
 });
 
 // Manager Access
+// managerButton.addEventListener("click", () => {
+//   const enteredPassword = prompt("Enter the Manager Password:");
+//   if (enteredPassword === managerPassword) {
+//     loginPage.classList.add("hidden");
+//     managerPage.classList.remove("hidden");
+
+//     const userEntries = Object.entries(data);
+//     managerList.innerHTML = userEntries
+//       .map(
+//         ([username, userData]) => `
+//         <li class="bg-gray-200 p-4 rounded-lg">
+//           <h3 class="text-lg font-bold">${username}</h3>
+//           <p><strong>Remaining Hours:</strong> ${userData.remainingHours.toFixed(2)}</p>
+//           <h4 class="font-bold mt-2">Work Logs:</h4>
+//           <ul class="space-y-4 border-t border-gray-300 pt-2">
+//             ${userData.logs
+//               .map(
+//                 (log, index) => `
+//               <li class="border-b border-gray-300 pb-2 mb-2">
+//                 <p><strong>Date:</strong> ${log.date}</p>
+//                 <p><strong>Hours:</strong> ${log.hours}</p>
+//                 <p><strong>Task:</strong> ${log.task}</p>
+//               </li>`
+//               )
+//               .join("")}
+//           </ul>
+//         </li>`
+//       )
+//       .join("");
+//   } else {
+//     alert("Invalid Manager Password.");
+//   }
+// });
+
+// begin of changes
 managerButton.addEventListener("click", () => {
   const enteredPassword = prompt("Enter the Manager Password:");
   if (enteredPassword === managerPassword) {
     loginPage.classList.add("hidden");
     managerPage.classList.remove("hidden");
 
-    const userEntries = Object.entries(data);
-    managerList.innerHTML = userEntries
-      .map(
-        ([username, userData]) => `
-        <li class="bg-gray-200 p-4 rounded-lg">
-          <h3 class="text-lg font-bold">${username}</h3>
-          <p><strong>Remaining Hours:</strong> ${userData.remainingHours.toFixed(2)}</p>
-          <h4 class="font-bold mt-2">Work Logs:</h4>
-          <ul class="space-y-4 border-t border-gray-300 pt-2">
-            ${userData.logs
-              .map(
-                (log, index) => `
-              <li class="border-b border-gray-300 pb-2 mb-2">
-                <p><strong>Date:</strong> ${log.date}</p>
-                <p><strong>Hours:</strong> ${log.hours}</p>
-                <p><strong>Task:</strong> ${log.task}</p>
-              </li>`
-              )
-              .join("")}
-          </ul>
-        </li>`
-      )
-      .join("");
+    renderManagerDashboard();
   } else {
     alert("Invalid Manager Password.");
   }
 });
 
+function renderManagerDashboard() {
+  const userEntries = Object.entries(data);
+  managerList.innerHTML = userEntries
+    .map(
+      ([username, userData]) => `
+      <li class="bg-gray-200 p-4 rounded-lg">
+        <div class="flex justify-between items-center">
+          <h3 class="text-lg font-bold">${username}</h3>
+          <button class="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600" onclick="removeUser('${username}')">
+            Remove
+          </button>
+        </div>
+        <p><strong>Remaining Hours:</strong> ${userData.remainingHours.toFixed(2)}</p>
+        <h4 class="font-bold mt-2">Work Logs:</h4>
+        <ul class="space-y-4 border-t border-gray-300 pt-2">
+          ${userData.logs
+            .map(
+              (log) => `
+            <li class="border-b border-gray-300 pb-2 mb-2">
+              <p><strong>Date:</strong> ${log.date}</p>
+              <p><strong>Hours:</strong> ${log.hours}</p>
+              <p><strong>Task:</strong> ${log.task}</p>
+            </li>`
+            )
+            .join("")}
+        </ul>
+      </li>`
+    )
+    .join("");
+}
+
+// Remove User
+function removeUser(username) {
+  if (confirm(`Are you sure you want to remove the user "${username}"?`)) {
+    delete users[username];
+    delete data[username];
+
+    // Update localStorage
+    localStorage.setItem("users", JSON.stringify(users));
+    localStorage.setItem("data", JSON.stringify(data));
+
+    // Re-render the manager dashboard
+    renderManagerDashboard();
+  }
+}
+
+// // Create New User
+// document.getElementById("createUserButton").addEventListener("click", () => {
+//   const newUsername = document.getElementById("newUsername").value.trim();
+//   const newPassword = document.getElementById("newPassword").value.trim();
+
+//   if (!newUsername || !newPassword) {
+//     alert("Both fields are required.");
+//     return;
+//   }
+
+//   if (users[newUsername]) {
+//     alert("Username already exists.");
+//     return;
+//   }
+
+//   if (!isValidPassword(newPassword)) {
+//     alert(
+//       "Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, one number, and one special character."
+//     );
+//     return;
+//   }
+
+  // Add new user
+  users[newUsername] = newPassword;
+  data[newUsername] = { remainingHours: 270, logs: [] };
+
+  // Update localStorage
+  localStorage.setItem("users", JSON.stringify(users));
+  localStorage.setItem("data", JSON.stringify(data));
+
+  // Clear input fields
+  document.getElementById("newUsername").value = "";
+  document.getElementById("newPassword").value = "";
+
+  // Re-render the manager dashboard
+  renderManagerDashboard();
+  alert(`User "${newUsername}" created successfully.`);
+});
+
+
+// end of changes
 backToLogin.addEventListener("click", () => {
   managerPage.classList.add("hidden");
   loginPage.classList.remove("hidden");

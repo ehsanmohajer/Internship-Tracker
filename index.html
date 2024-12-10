@@ -130,7 +130,7 @@
   </div>
 
   <!-- Manager Page -->
-  <div id="managerPage" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
+  <!-- <div id="managerPage" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
     <div class="bg-white shadow-md rounded-lg p-6 max-w-lg w-full">
 
       <h1 class="text-2xl font-bold mb-4 text-center">Manager Dashboard</h1>
@@ -140,7 +140,43 @@
         Back to Login
       </button>
     </div>
+  </div> -->
+
+  <!-- Manager Page -->
+<div id="managerPage" class="hidden min-h-screen flex flex-col items-center justify-center p-4">
+  <div class="bg-white shadow-md rounded-lg p-6 max-w-lg w-full">
+    <h1 class="text-2xl font-bold mb-4 text-center">Manager Dashboard</h1>
+
+    <!-- List of Users -->
+    <div class="mb-6">
+      <h2 class="text-xl font-bold mb-2">All Users</h2>
+      <ul id="managerList" class="space-y-4"></ul>
+    </div>
+
+    <!-- Create New User -->
+    <div class="bg-gray-100 p-4 rounded-lg">
+      <h2 class="text-xl font-bold mb-4">Create New User</h2>
+      <div class="mb-4">
+        <label class="block font-medium mb-2">Username</label>
+        <input id="newUsername" type="text" class="border border-gray-300 rounded-lg px-3 py-2 w-full" placeholder="Enter username" />
+      </div>
+      <div class="mb-4">
+        <label class="block font-medium mb-2">Password</label>
+        <input id="newPassword" type="password" class="border border-gray-300 rounded-lg px-3 py-2 w-full" placeholder="Enter password" />
+      </div>
+      <button id="createUserButton" class="bg-green-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-green-600">
+        Create User
+      </button>
+    </div>
+
+    <!-- Back to Login -->
+    <button id="backToLogin" class="mt-6 bg-blue-500 text-white rounded-lg px-4 py-2 w-full font-medium hover:bg-blue-600">
+      Back to Login
+    </button>
   </div>
+</div>
+
+
 
   <script src="script.js"></script>
 </body>
