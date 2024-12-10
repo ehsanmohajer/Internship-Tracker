@@ -14,6 +14,7 @@ const welcomeMessage = document.getElementById("welcomeMessage");
 const currentDateTime = document.getElementById("currentDateTime");
 
 const remainingHoursDisplay = document.getElementById("remainingHours");
+const totalHoursWorkedDisplay = document.getElementById("totalHoursWorked");
 const workLog = document.getElementById("workLog");
 const managerList = document.getElementById("managerList");
 
@@ -41,9 +42,14 @@ function updateRemainingHours() {
 function renderLogs() {
   const logs = data[currentUser].logs;
 
-  // Recalculate remaining hours
+  // Calculate total hours worked
   const totalWorkedHours = logs.reduce((sum, log) => sum + log.hours, 0);
-  data[currentUser].remainingHours = 270 - totalWorkedHours;
+
+  // Update remaining hours (ensure it's reset when no logs exist)
+  data[currentUser].remainingHours = logs.length > 0 ? 270 - totalWorkedHours : 270;
+
+  // Update the total hours worked display
+  totalHoursWorkedDisplay.textContent = totalWorkedHours.toFixed(2);
 
   // Update the remaining hours display
   updateRemainingHours();
@@ -71,33 +77,6 @@ function renderLogs() {
   // Save updated data to localStorage
   localStorage.setItem("data", JSON.stringify(data));
 }
-
-function editLog(index) {
-  const log = data[currentUser].logs[index];
-
-  // Populate input fields with the selected log's data
-  document.getElementById("startDate").value = log.date;
-  document.getElementById("startTime").value = log.startTime || "";
-  document.getElementById("endTime").value = log.endTime || "";
-  document.getElementById("taskDescription").value = log.task;
-
-  // Remove the selected log for editing
-  data[currentUser].logs.splice(index, 1);
-
-  // Recalculate remaining hours
-  renderLogs();
-}
-
-function removeLog(index) {
-  if (confirm("Are you sure you want to remove this log?")) {
-    // Remove the log
-    data[currentUser].logs.splice(index, 1);
-
-    // Recalculate remaining hours and re-render logs
-    renderLogs();
-  }
-}
-
 
 // Password Validation
 function isValidPassword(password) {
@@ -138,7 +117,6 @@ registerButton.addEventListener("click", () => {
 
   welcomeMessage.textContent = `Hello, ${currentUser}!`;
   updateClock();
-  updateRemainingHours();
   renderLogs();
 });
 
@@ -163,7 +141,6 @@ loginButton.addEventListener("click", () => {
 
   welcomeMessage.textContent = `Hello, ${currentUser}!`;
   updateClock();
-  updateRemainingHours();
   renderLogs();
 });
 
@@ -235,11 +212,12 @@ backToLogin.addEventListener("click", () => {
 
 // Save Work
 submitButton.addEventListener("click", () => {
-  const startDate = document.getElementById("startDate").value || new Date().toISOString().split("T")[0];
+  const startDate = document.getElementById("startDate").value;
   const startTime = parseInt(document.getElementById("startTime").value);
   const endTime = parseInt(document.getElementById("endTime").value);
-  const taskDescription = document.getElementById("taskDescription").value;
+  const taskDescription = document.getElementById("taskDescription").value.trim();
 
+  // Validate input fields
   if (!startDate || isNaN(startTime) || isNaN(endTime) || !taskDescription) {
     alert("All fields are required.");
     return;
@@ -251,17 +229,54 @@ submitButton.addEventListener("click", () => {
   }
 
   const hoursWorked = endTime - startTime;
-  data[currentUser].remainingHours -= hoursWorked;
-  data[currentUser].logs.push({ date: startDate, hours: hoursWorked, task: taskDescription });
 
+  // Add the new work log
+  data[currentUser].logs.push({
+    date: startDate,
+    hours: hoursWorked,
+    task: taskDescription,
+    startTime,
+    endTime,
+  });
+
+  // Save updated logs and re-render
   localStorage.setItem("data", JSON.stringify(data));
-  updateRemainingHours();
   renderLogs();
 
+  // Clear input fields
+  document.getElementById("startDate").value = "";
   document.getElementById("startTime").value = "";
   document.getElementById("endTime").value = "";
   document.getElementById("taskDescription").value = "";
 });
+
+// Edit Work Log
+function editLog(index) {
+  const log = data[currentUser].logs[index];
+
+  // Populate input fields with the selected log's data
+  document.getElementById("startDate").value = log.date;
+  document.getElementById("startTime").value = log.startTime;
+  document.getElementById("endTime").value = log.endTime;
+  document.getElementById("taskDescription").value = log.task;
+
+  // Remove the selected log for editing
+  data[currentUser].logs.splice(index, 1);
+
+  // Recalculate remaining hours and re-render
+  renderLogs();
+}
+
+// Remove Work Log
+function removeLog(index) {
+  if (confirm("Are you sure you want to remove this log?")) {
+    // Remove the log
+    data[currentUser].logs.splice(index, 1);
+
+    // Recalculate remaining hours and re-render logs
+    renderLogs();
+  }
+}
 
 // Logout
 logoutButton.addEventListener("click", () => {
@@ -271,30 +286,3 @@ logoutButton.addEventListener("click", () => {
   usernameInput.value = "";
   passwordInput.value = "";
 });
-
-// Helper function to get the current date details
-function updateWelcomeDate() {
-  const dateInfoElement = document.getElementById("dateInfo");
-
-  // Get current date
-  const now = new Date();
-
-  // Days and months arrays for friendly names
-  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-
-  // Extract day, date, month, and year
-  const dayName = days[now.getDay()];
-  const dateNumber = now.getDate();
-  const monthName = months[now.getMonth()];
-  const year = now.getFullYear();
-
-  // Set the text content
-  dateInfoElement.textContent = `${dayName}, ${dateNumber} ${monthName} ${year}`;
-}
-
-// Call the function to update the welcome text
-updateWelcomeDate();
