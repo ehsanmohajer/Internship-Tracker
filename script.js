@@ -224,3 +224,29 @@ logoutButton.addEventListener("click", () => {
   usernameInput.value = "";
   passwordInput.value = "";
 });
+
+// Helper function to get the current date details
+function updateWelcomeDate() {
+  const dateInfoElement = document.getElementById("dateInfo");
+
+  // Get current date
+  const now = new Date();
+
+  // Days and months arrays for friendly names
+  const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
+  // Extract day, month, and year
+  const dayName = days[now.getDay()];
+  const monthName = months[now.getMonth()];
+  const year = now.getFullYear();
+
+  // Set the text content
+  dateInfoElement.textContent = `${dayName}, ${monthName} ${year}`;
+}
+
+// Call the function to update the welcome text
+updateWelcomeDate();
