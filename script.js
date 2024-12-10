@@ -40,6 +40,15 @@ function updateRemainingHours() {
 
 function renderLogs() {
   const logs = data[currentUser].logs;
+
+  // Recalculate remaining hours
+  const totalWorkedHours = logs.reduce((sum, log) => sum + log.hours, 0);
+  data[currentUser].remainingHours = 270 - totalWorkedHours;
+
+  // Update the remaining hours display
+  updateRemainingHours();
+
+  // Render the logs
   workLog.innerHTML = logs
     .map(
       (log, index) => `
@@ -51,43 +60,44 @@ function renderLogs() {
         </div>
         <div class="flex gap-2">
           <!-- Edit Button -->
-          <button class="bg-green-600 text-white px-2 py-1 rounded-md hover:bg-yellow-500" onclick="editLog(${index})">Edit</button>
+          <button class="bg-yellow-400 text-white px-2 py-1 rounded-md hover:bg-yellow-500" onclick="editLog(${index})">Edit</button>
           <!-- Remove Button -->
           <button class="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600" onclick="removeLog(${index})">Remove</button>
         </div>
       </li>`
     )
     .join("");
+
+  // Save updated data to localStorage
+  localStorage.setItem("data", JSON.stringify(data));
 }
 
 function editLog(index) {
   const log = data[currentUser].logs[index];
 
-  // Populate the input fields with the selected log's data
+  // Populate input fields with the selected log's data
   document.getElementById("startDate").value = log.date;
-  document.getElementById("startTime").value = log.startTime;
-  document.getElementById("endTime").value = log.endTime;
+  document.getElementById("startTime").value = log.startTime || "";
+  document.getElementById("endTime").value = log.endTime || "";
   document.getElementById("taskDescription").value = log.task;
 
-  // Remove the log from the list temporarily for editing
+  // Remove the selected log for editing
   data[currentUser].logs.splice(index, 1);
 
-  // Save the updated logs and re-render
-  localStorage.setItem("data", JSON.stringify(data));
+  // Recalculate remaining hours
   renderLogs();
 }
 
 function removeLog(index) {
-  // Confirm before removing
   if (confirm("Are you sure you want to remove this log?")) {
     // Remove the log
     data[currentUser].logs.splice(index, 1);
 
-    // Save the updated logs and re-render
-    localStorage.setItem("data", JSON.stringify(data));
+    // Recalculate remaining hours and re-render logs
     renderLogs();
   }
 }
+
 
 // Password Validation
 function isValidPassword(password) {
