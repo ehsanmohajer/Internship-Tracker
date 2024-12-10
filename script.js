@@ -269,12 +269,18 @@ logoutButton.addEventListener("click", () => {
   passwordInput.value = "";
 });
 
-// add remove user button
+// Manager Dashboard
 function renderManagerDashboard() {
+  // Calculate summary statistics
+  const numberOfUsers = Object.keys(data).length;
+  const totalWorkingHours = Object.values(data)
+    .reduce((sum, user) => sum + user.logs.reduce((userSum, log) => userSum + log.hours, 0), 0);
+  const totalTasks = Object.values(data).reduce((sum, user) => sum + user.logs.length, 0);
+
+  // Render user details
   managerList.innerHTML = Object.entries(data)
     .map(
       ([username, userData]) => {
-        // Calculate total working hours
         const totalWorkedHours = userData.logs.reduce((sum, log) => sum + log.hours, 0);
 
         return `
@@ -307,7 +313,59 @@ function renderManagerDashboard() {
       }
     )
     .join("");
+
+  // Add summary section
+  const summaryHTML = `
+    <div class="mt-6 bg-gray-100 p-4 rounded-lg">
+      <h3 class="text-xl font-bold text-blue-500">Manager Summary</h3>
+      <p class="mt-2 text-lg font-medium text-gray-700">Number of Users: <span class="text-blue-600 font-bold">${numberOfUsers}</span></p>
+      <p class="mt-1 text-lg font-medium text-gray-700">Total Working Hours: <span class="text-blue-600 font-bold">${totalWorkingHours.toFixed(2)}</span></p>
+      <p class="mt-1 text-lg font-medium text-gray-700">Total Tasks Completed: <span class="text-blue-600 font-bold">${totalTasks}</span></p>
+    </div>
+  `;
+
+  // Append summary to the manager dashboard
+  managerList.insertAdjacentHTML("afterend", summaryHTML);
 }
+
+// function renderManagerDashboard() {
+//   managerList.innerHTML = Object.entries(data)
+//     .map(
+//       ([username, userData]) => {
+//         // Calculate total working hours
+//         const totalWorkedHours = userData.logs.reduce((sum, log) => sum + log.hours, 0);
+
+//         return `
+//           <li class="bg-gray-200 p-4 rounded-lg flex flex-col justify-between">
+//             <div>
+//               <h3 class="text-lg font-bold">User: ['${username}']</h3>
+//               <p><strong>Remaining Hours:</strong> ${userData.remainingHours.toFixed(2)}</p>
+//               <p><strong>Total Working Hours:</strong> ${totalWorkedHours.toFixed(2)}</p>
+//               <h4 class="font-bold mt-2">Work Logs:</h4>
+//               <ul class="space-y-2 border-t border-gray-300 pt-2">
+//                 ${userData.logs
+//                   .map(
+//                     (log) => `
+//                       <li class="border-b border-gray-300 pb-2">
+//                         <p><span class="text-blue-500 font-medium">Date:</span> ${log.date}</p>
+//                         <p><span class="text-blue-500 font-medium">Hours:</span> ${log.hours}</p>
+//                         <p><span class="text-blue-500 font-medium">Task:</span> ${log.task}</p>
+//                       </li>`
+//                   )
+//                   .join("")}
+//               </ul>
+//             </div>
+//             <!-- Remove User Button -->
+//             <div class="flex justify-end mt-4">
+//               <button 
+//                 class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded-md hover:bg-red-600" 
+//                 onclick="removeUser('${username}')">Remove User</button>
+//             </div>
+//           </li>`;
+//       }
+//     )
+//     .join("");
+// }
 
 
 function removeUser(username) {
