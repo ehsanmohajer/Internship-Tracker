@@ -192,7 +192,7 @@ backToLogin.addEventListener("click", () => {
   loginPage.classList.remove("hidden");
 });
 
-// Save Work
+// submit (save) Work
 submitButton.addEventListener("click", () => {
   const startDate = document.getElementById("startDate").value;
   const startTime = parseInt(document.getElementById("startTime").value);
@@ -202,6 +202,15 @@ submitButton.addEventListener("click", () => {
   // Validate input fields
   if (!startDate || isNaN(startTime) || isNaN(endTime) || !taskDescription) {
     alert("All fields are required.");
+    return;
+  }
+
+  // Check if the entered date is in the future
+  const today = new Date();
+  const enteredDate = new Date(startDate);
+
+  if (enteredDate > today) {
+    alert("You cannot define a work log for a future date.");
     return;
   }
 
@@ -231,6 +240,44 @@ submitButton.addEventListener("click", () => {
   document.getElementById("endTime").value = "";
   document.getElementById("taskDescription").value = "";
 });
+// submitButton.addEventListener("click", () => {
+//   const startDate = document.getElementById("startDate").value;
+//   const startTime = parseInt(document.getElementById("startTime").value);
+//   const endTime = parseInt(document.getElementById("endTime").value);
+//   const taskDescription = document.getElementById("taskDescription").value.trim();
+
+//   // Validate input fields
+//   if (!startDate || isNaN(startTime) || isNaN(endTime) || !taskDescription) {
+//     alert("All fields are required.");
+//     return;
+//   }
+
+//   if (endTime <= startTime) {
+//     alert("End time must be after start time.");
+//     return;
+//   }
+
+//   const hoursWorked = endTime - startTime;
+
+//   // Add the new work log
+//   data[currentUser].logs.push({
+//     date: startDate,
+//     hours: hoursWorked,
+//     task: taskDescription,
+//     startTime,
+//     endTime,
+//   });
+
+//   // Save updated logs and re-render
+//   localStorage.setItem("data", JSON.stringify(data));
+//   renderLogs();
+
+//   // Clear input fields
+//   document.getElementById("startDate").value = "";
+//   document.getElementById("startTime").value = "";
+//   document.getElementById("endTime").value = "";
+//   document.getElementById("taskDescription").value = "";
+// });
 
 // Edit Work Log
 function editLog(index) {
