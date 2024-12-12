@@ -1,34 +1,16 @@
-// const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-// const userSchema = new mongoose.Schema({
-//   username: String,
-//   password: String,
-//   remainingHours: Number,
-//   logs: [
-//     {
-//       date: String,
-//       hours: Number,
-//       task: String,
-//     },
-//   ],
-// });
-
-// module.exports = mongoose.model("User", userSchema);
-
-
-const mongoose = require("mongoose");
-
-const userSchema = new mongoose.Schema({
-  username: String,
-  password: String,
-  remainingHours: Number,
-  logs: [
-    {
-      date: String,
-      hours: Number,
-      task: String,
-    },
-  ],
+const logSchema = new mongoose.Schema({
+  date: { type: String, required: true },
+  hours: { type: Number, required: true },
+  task: { type: String, required: true },
 });
 
-module.exports = mongoose.model("User", userSchema);
+const userSchema = new mongoose.Schema({
+  username: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
+  remainingHours: { type: Number, default: 270 },
+  logs: [logSchema],
+});
+
+module.exports = mongoose.model('User', userSchema);
