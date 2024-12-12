@@ -1,48 +1,28 @@
 # Internship Tracker
-A webpage for students to save their working hours and logs into their dashboard.
 
-# User Dashboard for Internship Hours
-
-This project is a web-based **User Dashboard** to manage and track internship hours for multiple users. It includes features for user registration, login, and tracking working hours. Additionally, a **Manager Dashboard** is provided to view users' progress and work logs.
+A web application for students to track their internship hours. This app provides user and manager dashboards to log, monitor, and manage internship progress.
 
 ## Features
 
 ### User Dashboard
-- **User Registration**: New users can register with a username and a password.
-- **Login**: Existing users can log in securely.
-- **Password Validation**: Passwords must meet security requirements:
-  - At least 8 characters long.
-  - Contains at least one uppercase letter, one lowercase letter, one number, and one special character.
-- **Forgot Password**: Users can reset their password if forgotten.
-- **Dashboard**:
-  - Displays a greeting with the username (e.g., `Hello, [username]!`).
-  - Tracks and displays remaining internship hours.
-  - Allows users to log daily working hours and tasks.
-  - Displays a real-time clock.
+- **Registration** and **Login** with password validation.
+- Log daily working hours and tasks.
+- Track remaining internship hours.
+- Real-time clock and work logs.
 
 ### Manager Dashboard
-- **User Overview**:
-  - Lists all users with their remaining internship hours.
-  - Displays detailed work logs for each user (dates, hours worked, and tasks performed).
-- **Access**:
-  - Accessible via a "Manager Access" button on the login page.
+- View all users, their remaining hours, and work logs.
+- Remove users if necessary.
 
-## Technologies Used
-- **HTML**: Structure of the web pages.
-- **CSS (Tailwind CSS)**: Styling and layout.
-- **JavaScript**: Core functionality and logic.
-- **GitHub Pages**: Hosting (optional for live demo).
+## Technologies
+- **Frontend:** HTML, CSS (Tailwind), JavaScript
+- **Backend:** Node.js, Express.js
+- **Database:** MongoDB (Cloud)
+- **Hosting:** GitHub Pages (Frontend), Node.js Server (Backend)
 
-## How to Use
-### 1. Clone the Repository
-```bash
-git clone (https://github.com/ehsanmohajer/Internship-Tracker.git)
-cd Internship-Tracker
+## Installation
 
-
-
-## Internship-Tracker/
-├── index.html        # Main HTML file
-├── script.js         # JavaScript for functionality
-├── styles.css        # (Optional) Additional custom styles
-└── README.md         # Project documentation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/ehsanmohajer/Internship-Tracker.git
+   cd Internship-Tracker

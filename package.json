@@ -1,18 +1,26 @@
 {
   "name": "internship-tracker",
   "version": "1.0.0",
-  "description": "A webpage for students to save their working hours and logs into their dashboard.",
-  "main": "script.js",
+  "description": "A webpage and backend system for students to track their internship working hours and logs.",
+  "main": "server/server.js",
   "scripts": {
+    "start": "node server/server.js",
+    "dev": "nodemon server/server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "internship",
+    "tracker",
+    "dashboard",
+    "students"
+  ],
+  "author": "Ehsan Mohajer",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.3",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
+    "nodemon": "^3.1.7",
     "express": "^4.21.2",
     "mongodb": "^6.12.0",
     "mongoose": "^8.8.4"
