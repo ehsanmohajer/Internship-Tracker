@@ -21,6 +21,9 @@ const managerList = document.getElementById("managerList");
 const submitButton = document.getElementById("submitButton");
 const logoutButton = document.getElementById("logoutButton");
 
+const apiBase = "http://localhost:5000/api/users";
+
+
 let users = JSON.parse(localStorage.getItem("users")) || {}; // Stores usernames and passwords
 let data = JSON.parse(localStorage.getItem("data")) || {}; // Stores user-specific internship data
 let currentUser = null;
@@ -85,7 +88,7 @@ function isValidPassword(password) {
 }
 
 // Registration
-registerButton.addEventListener("click", () => {
+registerButton.addEventListener("click", async () => {
   const username = usernameInput.value.trim();
   const password = passwordInput.value.trim();
 
@@ -94,31 +97,63 @@ registerButton.addEventListener("click", () => {
     return;
   }
 
-  if (!isValidPassword(password)) {
-    alert(
-      "Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, one number, and one special character."
-    );
-    return;
+  try {
+    const response = await fetch("http://localhost:5000/api/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+
+    const data = await response.json();
+    if (response.ok) {
+      alert(`User ${data.username} registered successfully.`);
+      loginPage.classList.add("hidden");
+      dashboard.classList.remove("hidden");
+      currentUser = data.username;
+      renderLogs(data.logs); // Render logs (empty for new users)
+    } else {
+      alert(data.error || "Error registering user.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Error connecting to the server.");
   }
-
-  if (users[username]) {
-    alert("Username already exists.");
-    return;
-  }
-
-  users[username] = password;
-  data[username] = { remainingHours: 270, logs: [] };
-  localStorage.setItem("users", JSON.stringify(users));
-  localStorage.setItem("data", JSON.stringify(data));
-
-  currentUser = username;
-  loginPage.classList.add("hidden");
-  dashboard.classList.remove("hidden");
-
-  welcomeMessage.textContent = `Hello, ${currentUser}!`;
-  updateClock();
-  renderLogs();
 });
+
+// registerButton.addEventListener("click", () => {
+//   const username = usernameInput.value.trim();
+//   const password = passwordInput.value.trim();
+
+//   if (!username || !password) {
+//     alert("Both fields are required.");
+//     return;
+//   }
+
+//   if (!isValidPassword(password)) {
+//     alert(
+//       "Password must be at least 8 characters long, include one uppercase letter, one lowercase letter, one number, and one special character."
+//     );
+//     return;
+//   }
+
+//   if (users[username]) {
+//     alert("Username already exists.");
+//     return;
+//   }
+
+//   users[username] = password;
+//   data[username] = { remainingHours: 270, logs: [] };
+//   localStorage.setItem("users", JSON.stringify(users));
+//   localStorage.setItem("data", JSON.stringify(data));
+
+//   currentUser = username;
+//   loginPage.classList.add("hidden");
+//   dashboard.classList.remove("hidden");
+
+//   welcomeMessage.textContent = `Hello, ${currentUser}!`;
+//   updateClock();
+//   renderLogs();
+// });
 
 // Login
 loginButton.addEventListener("click", () => {
@@ -171,75 +206,224 @@ forgotPasswordButton.addEventListener("click", () => {
 });
 
 // Manager Access
-managerButton.addEventListener("click", () => {
+async function fetchUsers() {
+  try {
+    const response = await fetch("http://localhost:5000/api/users");
+    const users = await response.json();
+
+    if (response.ok) {
+      renderManagerDashboard(users);
+    } else {
+      alert("Error fetching users.");
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Error connecting to the server.");
+  }
+}
+
+managerButton.addEventListener("click", async () => {
   const enteredPassword = prompt("Enter the Manager Password:");
   if (enteredPassword === managerPassword) {
-    // Switch to Manager Page
     loginPage.classList.add("hidden");
     managerPage.classList.remove("hidden");
-
-    // Render Manager Dashboard
-    renderManagerDashboard();
+    await fetchUsers();
   } else {
-    // Invalid Password Alert
     alert("Invalid Manager Password.");
   }
 });
 
+// 
+// Frontend Interaction with Backend API
+const apiBase = "http://localhost:5000/api/users";
 
-backToLogin.addEventListener("click", () => {
-  managerPage.classList.add("hidden");
-  loginPage.classList.remove("hidden");
+// Register User
+registerButton.addEventListener("click", async () => {
+  const username = usernameInput.value.trim();
+  const password = passwordInput.value.trim();
+
+  if (!username || !password) {
+    alert("Both fields are required.");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${apiBase}/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password }),
+    });
+    if (response.ok) {
+      alert("User registered successfully.");
+      // Redirect to Dashboard
+    } else {
+      const error = await response.json();
+      alert(error.error);
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Error registering user.");
+  }
 });
+
+// Add Log
+submitButton.addEventListener("click", async () => {
+  const log = {
+    date: startDate.value,
+    hours: Number(endTime.value) - Number(startTime.value),
+    task: taskDescription.value.trim(),
+  };
+
+  try {
+    const response = await fetch(`${apiBase}/addLog`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: currentUser, log }),
+    });
+
+    if (response.ok) {
+      const logs = await response.json();
+      renderLogs(logs);
+    } else {
+      const error = await response.json();
+      alert(error.error);
+    }
+  } catch (err) {
+    console.error(err);
+    alert("Error adding log.");
+  }
+});
+
+// Render Manager Dashboard
+async function renderManagerDashboard() {
+  try {
+    const response = await fetch(apiBase);
+    const users = await response.json();
+    // Render User Cards
+  } catch (err) {
+    console.error(err);
+    alert("Error fetching users.");
+  }
+}
+
+// 
+// managerButton.addEventListener("click", () => {
+//   const enteredPassword = prompt("Enter the Manager Password:");
+//   if (enteredPassword === managerPassword) {
+//     // Switch to Manager Page
+//     loginPage.classList.add("hidden");
+//     managerPage.classList.remove("hidden");
+
+//     // Render Manager Dashboard
+//     renderManagerDashboard();
+//   } else {
+//     // Invalid Password Alert
+//     alert("Invalid Manager Password.");
+//   }
+// });
+
+
+// backToLogin.addEventListener("click", () => {
+//   managerPage.classList.add("hidden");
+//   loginPage.classList.remove("hidden");
+// });
 
 // submit (save) Work
-submitButton.addEventListener("click", () => {
-  const startDate = document.getElementById("startDate").value;
-  const startTime = parseInt(document.getElementById("startTime").value);
-  const endTime = parseInt(document.getElementById("endTime").value);
-  const taskDescription = document.getElementById("taskDescription").value.trim();
+// submitButton.addEventListener("click", async () => {
+//   const startDate = document.getElementById("startDate").value;
+//   const startTime = parseInt(document.getElementById("startTime").value);
+//   const endTime = parseInt(document.getElementById("endTime").value);
+//   const taskDescription = document.getElementById("taskDescription").value.trim();
 
-  // Validate input fields
-  if (!startDate || isNaN(startTime) || isNaN(endTime) || !taskDescription) {
-    alert("All fields are required.");
-    return;
-  }
+//   if (!startDate || isNaN(startTime) || isNaN(endTime) || !taskDescription) {
+//     alert("All fields are required.");
+//     return;
+//   }
 
-  // Check if the entered date is in the future
-  const today = new Date();
-  const enteredDate = new Date(startDate);
+//   if (endTime <= startTime) {
+//     alert("End time must be after start time.");
+//     return;
+//   }
 
-  if (enteredDate > today) {
-    alert("You cannot define a work log for a future date.");
-    return;
-  }
+//   const hoursWorked = endTime - startTime;
 
-  if (endTime <= startTime) {
-    alert("End time must be after start time.");
-    return;
-  }
+//   const log = {
+//     date: startDate,
+//     hours: hoursWorked,
+//     task: taskDescription,
+//     startTime,
+//     endTime,
+//   };
 
-  const hoursWorked = endTime - startTime;
+//   try {
+//     const response = await fetch("http://localhost:5000/api/add-log", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ username: currentUser, log }),
+//     });
 
-  // Add the new work log
-  data[currentUser].logs.push({
-    date: startDate,
-    hours: hoursWorked,
-    task: taskDescription,
-    startTime,
-    endTime,
-  });
+//     const data = await response.json();
+//     if (response.ok) {
+//       alert("Work log added successfully.");
+//       renderLogs(data.logs);
+//     } else {
+//       alert(data.error || "Error saving work log.");
+//     }
+//   } catch (err) {
+//     console.error(err);
+//     alert("Error connecting to the server.");
+//   }
+// });
 
-  // Save updated logs and re-render
-  localStorage.setItem("data", JSON.stringify(data));
-  renderLogs();
 
-  // Clear input fields
-  document.getElementById("startDate").value = "";
-  document.getElementById("startTime").value = "";
-  document.getElementById("endTime").value = "";
-  document.getElementById("taskDescription").value = "";
-});
+
+// submitButton.addEventListener("click", () => {
+//   const startDate = document.getElementById("startDate").value;
+//   const startTime = parseInt(document.getElementById("startTime").value);
+//   const endTime = parseInt(document.getElementById("endTime").value);
+//   const taskDescription = document.getElementById("taskDescription").value.trim();
+
+//   // Validate input fields
+//   if (!startDate || isNaN(startTime) || isNaN(endTime) || !taskDescription) {
+//     alert("All fields are required.");
+//     return;
+//   }
+
+//   // Check if the entered date is in the future
+//   const today = new Date();
+//   const enteredDate = new Date(startDate);
+
+//   if (enteredDate > today) {
+//     alert("You cannot define a work log for a future date.");
+//     return;
+//   }
+
+//   if (endTime <= startTime) {
+//     alert("End time must be after start time.");
+//     return;
+//   }
+
+//   const hoursWorked = endTime - startTime;
+
+//   // Add the new work log
+//   data[currentUser].logs.push({
+//     date: startDate,
+//     hours: hoursWorked,
+//     task: taskDescription,
+//     startTime,
+//     endTime,
+//   });
+
+//   // Save updated logs and re-render
+//   localStorage.setItem("data", JSON.stringify(data));
+//   renderLogs();
+
+//   // Clear input fields
+//   document.getElementById("startDate").value = "";
+//   document.getElementById("startTime").value = "";
+//   document.getElementById("endTime").value = "";
+//   document.getElementById("taskDescription").value = "";
+// });
 // submitButton.addEventListener("click", () => {
 //   const startDate = document.getElementById("startDate").value;
 //   const startTime = parseInt(document.getElementById("startTime").value);
