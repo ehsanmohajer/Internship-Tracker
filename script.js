@@ -204,6 +204,15 @@ submitButton.addEventListener("click", async () => {
     alert("All fields are required.");
     return;
   }
+    
+  // Check if a log for this date already exists
+    const existingLog = data[currentUser].logs.find((log) => log.date === startDate);
+    if (existingLog) {
+      alert("A log for this date already exists. Please edit the existing log.");
+      return;
+    }
+
+
 
   // Validate time input
   if (
