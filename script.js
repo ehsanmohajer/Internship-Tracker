@@ -40,7 +40,7 @@ function updateRemainingHours() {
 }
 
 function renderLogs() {
-  const logs = data[currentUser].logs;
+  const logs = data[currentUser].logs.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort descending
 
   // Calculate total hours worked
   const totalWorkedHours = logs.reduce((sum, log) => sum + log.hours, 0);
@@ -54,29 +54,10 @@ function renderLogs() {
   // Update the remaining hours display
   updateRemainingHours();
 
-  // Render the logs
-  // workLog.innerHTML = logs
-  //   .map(
-  //     (log, index) => `
-  //     <li class="bg-gray-200 p-4 rounded-lg flex justify-between items-start">
-  //       <div>
-  //         <p><strong>Date:</strong> ${log.date}</p>
-  //         <p><strong>Hours Worked:</strong> ${log.hours}</p>
-  //         <p><strong>Task:</strong> ${log.task}</p>
-  //       </div>
-  //       <div class="flex gap-2">
-  //         <!-- Edit Button -->
-  //         <button class="bg-yellow-400 text-white px-2 py-1 rounded-md hover:bg-yellow-500" onclick="editLog(${index})">Edit</button>
-  //         <!-- Remove Button -->
-  //         <button class="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600" onclick="removeLog(${index})">Remove</button>
-  //       </div>
-  //     </li>`
-  //   )
-  //   .join("");
   workLog.innerHTML = logs
   .map(
     (log) => `
-    <li class="bg-gray-200 p-4 rounded-lg">
+    <li class="log-item">
       <p><strong>Date:</strong> ${log.date}</p>
       <p><strong>Time:</strong> ${log.startTime}:00 - ${log.endTime}:00</p>
       <p><strong>Task:</strong> ${log.task}</p>
@@ -85,8 +66,7 @@ function renderLogs() {
   )
   .join("");
 
-  // Save updated data to localStorage
-  localStorage.setItem("data", JSON.stringify(data));
+localStorage.setItem("data", JSON.stringify(data));
 }
 
 // Password Validation
@@ -216,6 +196,15 @@ submitButton.addEventListener("click", () => {
     return;
   }
 
+  const today = new Date().setHours(0, 0, 0, 0); // Get today's date without time
+  const inputDate = new Date(startDate).setHours(0, 0, 0, 0); // Convert input date to same format
+
+    // Validate input date is not in the future
+    if (inputDate > today) {
+      alert("You cannot log work for future dates.");
+      return;
+    }
+
   if (endTime <= startTime) {
     alert("End time must be after start time.");
     return;
@@ -308,68 +297,55 @@ logoutButton.addEventListener("click", () => {
 });
 
 function renderManagerDashboard() {
-  // Calculate summary statistics
-  const numberOfUsers = Object.keys(data).length;
-  const totalWorkingHours = Object.values(data)
-    .reduce((sum, user) => sum + user.logs.reduce((userSum, log) => userSum + log.hours, 0), 0);
-  const totalTasks = Object.values(data).reduce((sum, user) => sum + user.logs.length, 0);
-
   // Render user details
   managerList.innerHTML = Object.entries(data)
-    .map(
-      ([username, userData]) => {
-        const totalWorkedHours = userData.logs.reduce((sum, log) => sum + log.hours, 0);
+    .map(([username, userData]) => {
+      const sortedLogs = userData.logs.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort logs descending
 
-        return `
-          <li class="bg-gray-200 p-4 rounded-lg flex flex-col justify-between">
-            <div>
-              <h3 class="text-lg font-bold">User: ['${username}']</h3>
-              <p><strong>Remaining Hours:</strong> ${userData.remainingHours.toFixed(2)}</p>
-              <p><strong>Total Working Hours:</strong> ${totalWorkedHours.toFixed(2)}</p>
-              <h4 class="font-bold mt-2">Work Logs:</h4>
-              <ul class="space-y-2 border-t border-gray-300 pt-2">
-                ${userData.logs
-                  .map(
-                    (log) => `
-                      <li class="border-b border-gray-300 pb-2">
-                        <p><span class="text-blue-500 font-medium">Date:</span> ${log.date}</p>
-                        <p><span class="text-blue-500 font-medium">Hours:</span> ${log.hours}</p>
-                        <p><span class="text-blue-500 font-medium">Task:</span> ${log.task}</p>
-                      </li>`
-                  )
-                  .join("")}
-              </ul>
-            </div>
-            <!-- Remove User Button -->
-            <div class="flex justify-end mt-4">
-              <button 
-                class="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded-md hover:bg-red-600" 
-                onclick="removeUser('${username}')">Remove User</button>
-            </div>
-          </li>`;
-      }
-    )
+      return `
+        <li class="user-item">
+          <div class="flex justify-between items-center">
+          <h3><strong>User:</strong> "${username}"</h3>
+          <button class="remove-user-btn bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600" onclick="removeUser('${username}')">Remove User</button>
+        </div>
+          <div class="mb-4"></div> <!-- Adds a space between username and work logs -->
+          <ul>
+            ${sortedLogs
+              .map(
+                (log) => `
+                <li class="log-item">
+                  <p><strong>Date:</strong> ${log.date}</p>
+                  <p><strong>Time:</strong> ${log.startTime}:00 - ${log.endTime}:00</p>
+                  <p><strong>Task:</strong> ${log.task}</p>
+                  <p><strong>Hours Worked:</strong> ${log.hours}</p>
+                </li>`
+              )
+              .join("")}
+          </ul>
+        </li>`;
+    })
     .join("");
 
-  // Remove existing summary if it exists
-  const existingSummary = document.getElementById("managerSummary");
-  if (existingSummary) {
-    existingSummary.remove();
-  }
+  // Add Manager Summary
+  const numberOfUsers = Object.keys(data).length;
+  const totalWorkingHours = Object.values(data).reduce(
+    (sum, user) => sum + user.logs.reduce((userSum, log) => userSum + log.hours, 0),
+    0
+  );
+  const totalTasks = Object.values(data).reduce((sum, user) => sum + user.logs.length, 0);
 
-  // Add summary section
-  const summaryHTML = `
-    <div id="managerSummary" class="mt-6 bg-gray-100 p-4 rounded-lg">
-      <h3 class="text-xl font-bold text-blue-500">Manager Summary</h3>
-      <p class="mt-2 text-lg font-medium text-gray-700">Number of Users: <span class="text-blue-600 font-bold">${numberOfUsers}</span></p>
-      <p class="mt-1 text-lg font-medium text-gray-700">Total Working Hours: <span class="text-blue-600 font-bold">${totalWorkingHours.toFixed(2)}</span></p>
-      <p class="mt-1 text-lg font-medium text-gray-700">Total Tasks Completed: <span class="text-blue-600 font-bold">${totalTasks}</span></p>
+  const managerSummaryHTML = `
+    <div id="managerSummary" class="summary-box">
+      <h3 class="text-xl font-bold">Manager Summary</h3>
+      <p><strong>Number of Users:</strong> <span class="text-blue-600 font-bold">${numberOfUsers}</span></p>
+      <p><strong>Total Working Hours:</strong> <span class="text-blue-600 font-bold">${totalWorkingHours.toFixed(2)}</span></p>
+      <p><strong>Total Tasks Completed:</strong> <span class="text-blue-600 font-bold">${totalTasks}</span></p>
     </div>
   `;
 
-  // Append summary to the manager dashboard
-  managerList.insertAdjacentHTML("afterend", summaryHTML);
+  managerList.insertAdjacentHTML("beforebegin", managerSummaryHTML);
 }
+
 function removeUser(username) {
   if (confirm(`Are you sure you want to remove user "${username}"?`)) {
     // Remove user from users and data

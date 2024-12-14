@@ -32,6 +32,15 @@ router.post('/:username/logs', async (req, res) => {
     const user = await User.findOne({ username });
     if (!user) return res.status(404).json({ message: 'User not found' });
 
+     // Validate the date is not in the future
+     const today = new Date();
+     const inputDate = new Date(date);
+     
+     // Allow only today or past dates
+    if (inputDate > today) {
+      return res.status(400).json({ message: 'Cannot log work for future dates.' });
+    }
+
     // Find logs for the same date
     const existingLogs = user.logs.filter((log) => log.date === date);
 
@@ -102,7 +111,5 @@ router.put('/:username/logs', async (req, res) => {
     res.status(500).json({ error: 'Failed to update log' });
   }
 });
-
-
 
 module.exports = router;
