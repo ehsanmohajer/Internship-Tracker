@@ -38,9 +38,9 @@ function updateClock() {
 function updateRemainingHours() {
   remainingHoursDisplay.textContent = data[currentUser].remainingHours.toFixed(2);
 }
-
+// ......................... original function ...................................
 function renderLogs() {
-  const logs = data[currentUser].logs.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort descending
+  const logs = data[currentUser].logs.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort logs descending
 
   // Calculate total hours worked
   const totalWorkedHours = logs.reduce((sum, log) => sum + log.hours, 0);
@@ -56,12 +56,16 @@ function renderLogs() {
 
   workLog.innerHTML = logs
   .map(
-    (log) => `
+    (log, index) => `
     <li class="log-item">
       <p><strong>Date:</strong> ${log.date}</p>
       <p><strong>Time:</strong> ${log.startTime}:00 - ${log.endTime}:00</p>
       <p><strong>Task:</strong> ${log.task}</p>
       <p><strong>Hours Worked:</strong> ${log.hours}</p>
+      <div class="flex gap-2 mt-2">
+          <button class="edit-log-btn bg-yellow-400 text-white px-2 py-1 rounded-md hover:bg-yellow-500" onclick="editLog(${index})">Edit</button>
+          <button class="remove-log-btn bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600" onclick="removeLog(${index})">Remove</button>
+      </div>
     </li>`
   )
   .join("");
@@ -295,12 +299,22 @@ logoutButton.addEventListener("click", () => {
   usernameInput.value = "";
   passwordInput.value = "";
 });
-
+// .................................................original function .................................................
 function renderManagerDashboard() {
+
+  // Remove existing Manager Summary if it exists
+  const existingSummary = document.getElementById("managerSummary");
+  if (existingSummary) {
+    existingSummary.remove();
+  }
+
   // Render user details
   managerList.innerHTML = Object.entries(data)
     .map(([username, userData]) => {
       const sortedLogs = userData.logs.sort((a, b) => new Date(b.date) - new Date(a.date)); // Sort logs descending
+
+      // Calculate total working hours for this user
+      const totalUserHours = userData.logs.reduce((sum, log) => sum + log.hours, 0);
 
       return `
         <li class="user-item">
@@ -309,6 +323,8 @@ function renderManagerDashboard() {
           <button class="remove-user-btn bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600" onclick="removeUser('${username}')">Remove User</button>
         </div>
           <div class="mb-4"></div> <!-- Adds a space between username and work logs -->
+          <p class="text-gray-600 mt-2 mb-4"><strong>Total Working Hours:</strong> ${totalUserHours.toFixed(2)}</p>
+
           <ul>
             ${sortedLogs
               .map(
@@ -322,6 +338,7 @@ function renderManagerDashboard() {
               )
               .join("")}
           </ul>
+          <hr class="user-separator"> <!-- Add a separator line after each user -->
         </li>`;
     })
     .join("");
@@ -345,6 +362,8 @@ function renderManagerDashboard() {
 
   managerList.insertAdjacentHTML("beforebegin", managerSummaryHTML);
 }
+
+// .................................................original function .................................................
 
 function removeUser(username) {
   if (confirm(`Are you sure you want to remove user "${username}"?`)) {

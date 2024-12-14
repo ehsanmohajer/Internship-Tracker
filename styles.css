@@ -107,3 +107,24 @@ body {
     margin-bottom: 1rem; /* Adds space between username and work logs */
   }
   
+  .text-gray-600 {
+    color: #4a5568; /* Gray color for text */
+  }
+  
+  .mt-2 {
+    margin-top: 0.5rem;
+  }
+  
+  .mb-4 {
+    margin-bottom: 1rem;
+  }
+  .user-separator {
+    border: none;
+    border-top: 2px solid #ccc;
+    margin: 1rem 0;
+  }
+  
+  .user-item {
+    padding-bottom: 1rem;
+  }
+    
