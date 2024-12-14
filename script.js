@@ -193,7 +193,7 @@ backToLogin.addEventListener("click", () => {
 });
 
 // submit (save) Work
-submitButton.addEventListener("click", () => {
+submitButton.addEventListener("click", async () => {
   const startDate = document.getElementById("startDate").value;
   const startTime = parseInt(document.getElementById("startTime").value);
   const endTime = parseInt(document.getElementById("endTime").value);
@@ -205,6 +205,20 @@ submitButton.addEventListener("click", () => {
     return;
   }
 
+  // Validate time input
+  if (
+    startTime < 1 ||
+    startTime > 24 ||
+    endTime < 1 ||
+    endTime > 24 ||
+    endTime <= startTime
+  ) {
+    alert(
+      "Invalid time input: Start Time and End Time must be between 1 and 24, and End Time must be greater than Start Time."
+    );
+    return;
+  }
+  
   // Check if the entered date is in the future
   const today = new Date();
   const enteredDate = new Date(startDate);
