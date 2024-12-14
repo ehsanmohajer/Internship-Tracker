@@ -26,20 +26,29 @@ router.post('/:username/logs', verifyToken, async (req, res) => {
 // Add a work log
 router.post('/:username/logs', async (req, res) => {
   const { username } = req.params;
-  const { date, hours, task } = req.body;
+  const { date, startTime, endTime, hours, task } = req.body;
 
   try {
     const user = await User.findOne({ username });
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    // Check if a log already exists for the given date
-    const existingLog = user.logs.find((log) => log.date === date);
-    if (existingLog) {
-      return res.status(400).json({ message: 'A log for this date already exists.' });
+    // Find logs for the same date
+    const existingLogs = user.logs.filter((log) => log.date === date);
+
+    // Check for overlapping times
+    const hasOverlap = existingLogs.some(
+      (log) =>
+        (startTime >= log.startTime && startTime < log.endTime) || // Start time overlaps
+        (endTime > log.startTime && endTime <= log.endTime) ||    // End time overlaps
+        (startTime <= log.startTime && endTime >= log.endTime)    // Enveloping range
+    );
+
+    if (hasOverlap) {
+      return res.status(400).json({ message: 'Time range overlaps with an existing log.' });
     }
 
     // Add the new log
-    user.logs.push({ date, hours, task });
+    user.logs.push({ date, startTime, endTime, hours, task });
     user.remainingHours -= hours;
     await user.save();
 

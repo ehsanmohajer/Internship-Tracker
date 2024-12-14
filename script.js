@@ -55,24 +55,35 @@ function renderLogs() {
   updateRemainingHours();
 
   // Render the logs
+  // workLog.innerHTML = logs
+  //   .map(
+  //     (log, index) => `
+  //     <li class="bg-gray-200 p-4 rounded-lg flex justify-between items-start">
+  //       <div>
+  //         <p><strong>Date:</strong> ${log.date}</p>
+  //         <p><strong>Hours Worked:</strong> ${log.hours}</p>
+  //         <p><strong>Task:</strong> ${log.task}</p>
+  //       </div>
+  //       <div class="flex gap-2">
+  //         <!-- Edit Button -->
+  //         <button class="bg-yellow-400 text-white px-2 py-1 rounded-md hover:bg-yellow-500" onclick="editLog(${index})">Edit</button>
+  //         <!-- Remove Button -->
+  //         <button class="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600" onclick="removeLog(${index})">Remove</button>
+  //       </div>
+  //     </li>`
+  //   )
+  //   .join("");
   workLog.innerHTML = logs
-    .map(
-      (log, index) => `
-      <li class="bg-gray-200 p-4 rounded-lg flex justify-between items-start">
-        <div>
-          <p><strong>Date:</strong> ${log.date}</p>
-          <p><strong>Hours Worked:</strong> ${log.hours}</p>
-          <p><strong>Task:</strong> ${log.task}</p>
-        </div>
-        <div class="flex gap-2">
-          <!-- Edit Button -->
-          <button class="bg-yellow-400 text-white px-2 py-1 rounded-md hover:bg-yellow-500" onclick="editLog(${index})">Edit</button>
-          <!-- Remove Button -->
-          <button class="bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600" onclick="removeLog(${index})">Remove</button>
-        </div>
-      </li>`
-    )
-    .join("");
+  .map(
+    (log) => `
+    <li class="bg-gray-200 p-4 rounded-lg">
+      <p><strong>Date:</strong> ${log.date}</p>
+      <p><strong>Time:</strong> ${log.startTime}:00 - ${log.endTime}:00</p>
+      <p><strong>Task:</strong> ${log.task}</p>
+      <p><strong>Hours Worked:</strong> ${log.hours}</p>
+    </li>`
+  )
+  .join("");
 
   // Save updated data to localStorage
   localStorage.setItem("data", JSON.stringify(data));
@@ -193,7 +204,7 @@ backToLogin.addEventListener("click", () => {
 });
 
 // submit (save) Work
-submitButton.addEventListener("click", async () => {
+submitButton.addEventListener("click", () => {
   const startDate = document.getElementById("startDate").value;
   const startTime = parseInt(document.getElementById("startTime").value);
   const endTime = parseInt(document.getElementById("endTime").value);
@@ -204,16 +215,11 @@ submitButton.addEventListener("click", async () => {
     alert("All fields are required.");
     return;
   }
-    
-  // Check if a log for this date already exists
-    const existingLog = data[currentUser].logs.find((log) => log.date === startDate);
-    if (existingLog) {
-      alert("A log for this date already exists. Please edit the existing log.");
-      return;
-    }
 
-
-
+  if (endTime <= startTime) {
+    alert("End time must be after start time.");
+    return;
+  }
   // Validate time input
   if (
     startTime < 1 ||
@@ -228,29 +234,29 @@ submitButton.addEventListener("click", async () => {
     return;
   }
   
-  // Check if the entered date is in the future
-  const today = new Date();
-  const enteredDate = new Date(startDate);
-
-  if (enteredDate > today) {
-    alert("You cannot define a work log for a future date.");
-    return;
-  }
-
-  if (endTime <= startTime) {
-    alert("End time must be after start time.");
-    return;
-  }
-
   const hoursWorked = endTime - startTime;
+
+  // Check for overlapping times on the same date
+  const existingLogs = data[currentUser].logs.filter((log) => log.date === startDate);
+  const hasOverlap = existingLogs.some(
+    (log) =>
+      (startTime >= log.startTime && startTime < log.endTime) || // Start time overlaps
+      (endTime > log.startTime && endTime <= log.endTime) ||    // End time overlaps
+      (startTime <= log.startTime && endTime >= log.endTime)    // Enveloping range
+  );
+
+  if (hasOverlap) {
+    alert("The time range overlaps with an existing log for this date.");
+    return;
+  }
 
   // Add the new work log
   data[currentUser].logs.push({
     date: startDate,
-    hours: hoursWorked,
-    task: taskDescription,
     startTime,
     endTime,
+    hours: hoursWorked,
+    task: taskDescription,
   });
 
   // Save updated logs and re-render
