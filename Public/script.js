@@ -75,31 +75,7 @@ function renderLogs() {
     .join("");
 
   // Save updated data to localStorage
-  // localStorage.setItem("data", JSON.stringify(data));
-  loginButton.addEventListener('click', async () => {
-    const username = usernameInput.value.trim();
-    const password = passwordInput.value.trim();
-  
-    try {
-      const response = await fetch('http://localhost:5000/api/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password }),
-      });
-  
-      if (!response.ok) throw new Error('Invalid username or password');
-  
-      const user = await response.json();
-      currentUser = user.username;
-      data[currentUser] = user;
-      loginPage.classList.add('hidden');
-      dashboard.classList.remove('hidden');
-      welcomeMessage.textContent = `Hello, ${currentUser}!`;
-      renderLogs();
-    } catch (error) {
-      alert(error.message);
-    }
-  });  
+  localStorage.setItem("data", JSON.stringify(data));
 }
 
 // Password Validation
@@ -264,44 +240,6 @@ submitButton.addEventListener("click", () => {
   document.getElementById("endTime").value = "";
   document.getElementById("taskDescription").value = "";
 });
-// submitButton.addEventListener("click", () => {
-//   const startDate = document.getElementById("startDate").value;
-//   const startTime = parseInt(document.getElementById("startTime").value);
-//   const endTime = parseInt(document.getElementById("endTime").value);
-//   const taskDescription = document.getElementById("taskDescription").value.trim();
-
-//   // Validate input fields
-//   if (!startDate || isNaN(startTime) || isNaN(endTime) || !taskDescription) {
-//     alert("All fields are required.");
-//     return;
-//   }
-
-//   if (endTime <= startTime) {
-//     alert("End time must be after start time.");
-//     return;
-//   }
-
-//   const hoursWorked = endTime - startTime;
-
-//   // Add the new work log
-//   data[currentUser].logs.push({
-//     date: startDate,
-//     hours: hoursWorked,
-//     task: taskDescription,
-//     startTime,
-//     endTime,
-//   });
-
-//   // Save updated logs and re-render
-//   localStorage.setItem("data", JSON.stringify(data));
-//   renderLogs();
-
-//   // Clear input fields
-//   document.getElementById("startDate").value = "";
-//   document.getElementById("startTime").value = "";
-//   document.getElementById("endTime").value = "";
-//   document.getElementById("taskDescription").value = "";
-// });
 
 // Edit Work Log
 function editLog(index) {
