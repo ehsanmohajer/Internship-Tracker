@@ -21,6 +21,11 @@ const managerList = document.getElementById("managerList");
 const submitButton = document.getElementById("submitButton");
 const logoutButton = document.getElementById("logoutButton");
 
+// Get references to the new manager password elements
+const managerPasswordContainer = document.getElementById("managerPasswordContainer");
+const managerPasswordField = document.getElementById("managerPasswordField");
+const confirmManagerAccess = document.getElementById("confirmManagerAccess");
+
 let users = JSON.parse(localStorage.getItem("users")) || {}; // Stores usernames and passwords
 let data = JSON.parse(localStorage.getItem("data")) || {}; // Stores user-specific internship data
 let currentUser = null;
@@ -166,17 +171,40 @@ forgotPasswordButton.addEventListener("click", () => {
 });
 
 // Manager Access
+// managerButton.addEventListener("click", () => {
+//   const enteredPassword = prompt("Enter the Manager Password:");
+//   if (enteredPassword === managerPassword) {
+//     // Switch to Manager Page
+//     loginPage.classList.add("hidden");
+//     managerPage.classList.remove("hidden");
+
+//     // Render Manager Dashboard
+//     renderManagerDashboard();
+//   } else {
+//     // Invalid Password Alert
+//     alert("Invalid Manager Password.");
+//   }
+// });
+// Manager Access
 managerButton.addEventListener("click", () => {
-  const enteredPassword = prompt("Enter the Manager Password:");
+  managerPasswordContainer.classList.remove("hidden");
+});
+// Confirm Manager Access
+confirmManagerAccess.addEventListener("click", () => {
+  const enteredPassword = managerPasswordField.value.trim();
+
   if (enteredPassword === managerPassword) {
-    // Switch to Manager Page
+    // Hide login page, show manager page
     loginPage.classList.add("hidden");
     managerPage.classList.remove("hidden");
 
     // Render Manager Dashboard
     renderManagerDashboard();
+
+    // Clear the manager password field and hide it again
+    managerPasswordField.value = "";
+    managerPasswordContainer.classList.add("hidden");
   } else {
-    // Invalid Password Alert
     alert("Invalid Manager Password.");
   }
 });
