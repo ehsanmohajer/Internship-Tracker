@@ -26,7 +26,7 @@ Internship-Tracker/
 ## Features
 
 ### User Dashboard
-- **Registration** and **Login** with password validation.
+- **Registration** and **Login** with password validation. User passwords are securely hashed using bcrypt before being stored in the database.
 - Log daily working hours and tasks.
 - Track remaining internship hours.
 - View real-time clock and work logs.
