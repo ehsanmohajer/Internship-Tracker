@@ -35,7 +35,8 @@ body {
   }
   
   button:hover {
-    background-color: #0056b3;
+    /* background-color: #0056b3; */
+    background-color: rgb(241 57 105);
   }
   
   .text-xl {
@@ -52,7 +53,7 @@ body {
 
   /* Manager Summary Styling */
   .summary-box {
-    background-color: #f1f1f1;
+    background-color: #47c55940;
     padding: 1rem;
     border-radius: 5px;
     margin-bottom: 1rem;
@@ -128,3 +129,17 @@ body {
     padding-bottom: 1rem;
   }
     
+  hr {
+    border: none;
+    border-top: 2px solid #ccc;
+    margin: 20px 0;
+  }
+  
+  .back1{
+    background-color:#4b83f93b ;
+  }
+
+  .sizee{
+    width: 100px;
+    height: 65px;
+  }
