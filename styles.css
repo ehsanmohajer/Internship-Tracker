@@ -85,7 +85,6 @@ body {
     margin: 0.5rem 0;
   }
   
-
   .remove-user-btn {
     background-color: #e3342f;
     color: white;
@@ -143,3 +142,45 @@ body {
     width: 100px;
     height: 65px;
   }
+
+  /* Dark Mode */
+  body.dark {
+    background-color: #1a202c; /* Dark background */
+    color: #434a53; /* Light gray text */
+  }
+
+  body.dark h1,
+  body.dark h2,
+  body.dark h3 {
+    color: #69717c; /* Slightly lighter text for headings */
+  }
+
+  body.dark button {
+    background-color: #2d3748;
+    color: #cbd5e0; /* Lighter button text for readability */
+  }
+
+  body.dark .bg-gray-300 {
+    background-color: #4a5568; /* Darker gray for backgrounds */
+  }
+
+  body.dark .bg-blue-500 {
+    background-color: #0e78c5; /* Slightly muted blue */
+  }
+
+  body.dark .text-gray-600 {
+    color: #a0aec0; /* Softer gray for secondary text */
+  }
+
+  body.dark .text-blue-600 {
+    color: #63b3ed; /* Muted blue for links and accents */
+  }
+
+  /* 
+  Progress Bar 
+  #progressBar {
+    background-color: #e2e8f0;
+  }
+  #progressFill {
+    transition: width 0.3s ease;
+  } */

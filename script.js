@@ -54,6 +54,19 @@ let showSummary = false; // initially hidden
 // Predefined Manager Password
 const managerPassword = "admin";
 
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById("darkModeToggle");
+
+darkModeToggle.addEventListener("click", () => {
+  document.body.classList.toggle("dark");
+  localStorage.setItem("darkMode", document.body.classList.contains("dark") ? "enabled" : "disabled");
+});
+
+// Maintain dark mode preference on page load
+if (localStorage.getItem("darkMode") === "enabled") {
+  document.body.classList.add("dark");
+}
+
 // Utility Functions
 function updateClock() {
   const now = new Date();

@@ -6,6 +6,7 @@ const cors = require('cors');
 
 const userRoutes = require('./routes/userRoutes'); // User-related routes
 const logRoutes = require('./routes/logRoutes');   // Log-related routes
+// app.use('/api', logRoutes); 
 
 const app = express();
 
