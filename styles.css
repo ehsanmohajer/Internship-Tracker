@@ -175,12 +175,3 @@ body {
   body.dark .text-blue-600 {
     color: #63b3ed; /* Muted blue for links and accents */
   }
-
-  /* 
-  Progress Bar 
-  #progressBar {
-    background-color: #e2e8f0;
-  }
-  #progressFill {
-    transition: width 0.3s ease;
-  } */

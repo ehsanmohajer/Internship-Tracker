@@ -1,6 +1,6 @@
 # Internship Tracker
 
-A web application for students to track their internship hours. This app provides user and manager dashboards to log, monitor, and manage internship progress. It includes a backend server connected to a MongoDB database for data persistence.
+A MERN (MongoDB, Express.js, React, Node.js) stack architecture and web application for students to track their internship hours. This app provides user and manager dashboards to log, monitor, and manage internship progress. It includes a backend server connected to a MongoDB database for data persistence.
 
 ---
 
