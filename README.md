@@ -4,7 +4,7 @@ A MERN (MongoDB, Express.js, React, Node.js) stack architecture and web applicat
 
 ---
 
-## Project Tree Structure
+## Project Tree Structure (Old ver)
 
 ```plaintext
 Internship-Tracker/
@@ -19,6 +19,41 @@ Internship-Tracker/
 │   ├── routes/             # API route handlers
 │   │   ├── logRoutes.js    # Routes for work logs (add, retrieve)
 │   │   └── userRoutes.js   # Routes for user authentication (register, login)
+```
+
+## Project Tree Structure (New ver)
+
+```plaintext
+Internship-Tracker/
+├── client/               # Frontend code
+│   ├── public/           # Static files (e.g., index.html, assets)
+│   │   └── index.html    # Main HTML file
+│   └── src/              # Frontend source code
+│       ├── assets/       # Images, fonts, etc.
+│       ├── css/          # CSS files
+│       | └── style.css   # style.css
+│       ├── js/           # JavaScript files
+│       | └── script.js   # script.js
+│       └── components/   # Reusable UI components (if using React or similar)
+│
+├── server/               # Backend code
+│   ├── models/           # Database models
+│   │   └── User.js       # User model
+│   ├── routes/           # API routes
+|   |   └── logRoutes.js  # logRoutes.js
+|   |   └── userRoutes.js # userRoutes.js
+│   ├── controllers/      # Business logic for routes (optional, for better separation)
+│   ├── middleware/       # Custom middleware (e.g., auth middleware)
+│   ├── config/           # Configuration files (e.g., database connection)
+│   ├── utils/            # Utility functions (e.g., JWT helpers)
+│   └── Server.js         # Backend dependencies
+│
+├── .env                  # Environment variables (ignored by Git)
+├── .gitignore            # Files/folders to ignore in Git
+├── License               # License
+├── package.json          # Root-level dependencies (if using a monorepo setup)
+├── README.md             # Project overview and setup instructions
+└── vercel.json           # Vercel configuration for deployment
 ```
 
 ---

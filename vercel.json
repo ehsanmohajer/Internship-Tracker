@@ -1,0 +1,14 @@
+{
+    "builds": [
+      {
+        "src": "client/public/index.html",
+        "use": "@vercel/static"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "server/index.js"
+      }
+    ]
+  }
